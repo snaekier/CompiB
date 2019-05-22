@@ -197,7 +197,7 @@ namespace CompiB
                         }
                         aux.Add(t);
                     }
-
+                    aux.Add(new Token("sdl", true));
                     //aux.AddRange(csLexer.GetTokens(s).ToList());
                 }
                 //}

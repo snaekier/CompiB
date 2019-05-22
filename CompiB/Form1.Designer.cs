@@ -34,6 +34,7 @@
             this.tablasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.anaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tAASToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.grámaticaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cuadruplosGrid = new System.Windows.Forms.DataGridView();
             this.tabsimGrid = new System.Windows.Forms.DataGridView();
             this.compilarB = new System.Windows.Forms.Button();
@@ -42,7 +43,6 @@
             this.lowLvlB = new System.Windows.Forms.Button();
             this.programaText = new System.Windows.Forms.RichTextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.grámaticaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cuadruplosGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabsimGrid)).BeginInit();
@@ -91,12 +91,21 @@
             this.anaToolStripMenuItem.Name = "anaToolStripMenuItem";
             this.anaToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.anaToolStripMenuItem.Text = "TAS";
+            this.anaToolStripMenuItem.Click += new System.EventHandler(this.anaToolStripMenuItem_Click);
             // 
             // tAASToolStripMenuItem
             // 
             this.tAASToolStripMenuItem.Name = "tAASToolStripMenuItem";
             this.tAASToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.tAASToolStripMenuItem.Text = "TAAS";
+            this.tAASToolStripMenuItem.Click += new System.EventHandler(this.tAASToolStripMenuItem_Click);
+            // 
+            // grámaticaToolStripMenuItem
+            // 
+            this.grámaticaToolStripMenuItem.Name = "grámaticaToolStripMenuItem";
+            this.grámaticaToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.grámaticaToolStripMenuItem.Text = "Grámatica";
+            this.grámaticaToolStripMenuItem.Click += new System.EventHandler(this.grámaticaToolStripMenuItem_Click);
             // 
             // cuadruplosGrid
             // 
@@ -124,9 +133,11 @@
             this.compilarB.TabIndex = 4;
             this.compilarB.Text = "Compilar";
             this.compilarB.UseVisualStyleBackColor = true;
+            this.compilarB.Click += new System.EventHandler(this.compilarB_Click);
             // 
             // ejecutaB
             // 
+            this.ejecutaB.Enabled = false;
             this.ejecutaB.Location = new System.Drawing.Point(1110, 145);
             this.ejecutaB.Name = "ejecutaB";
             this.ejecutaB.Size = new System.Drawing.Size(98, 51);
@@ -136,6 +147,7 @@
             // 
             // highLvlB
             // 
+            this.highLvlB.Enabled = false;
             this.highLvlB.Location = new System.Drawing.Point(1213, 145);
             this.highLvlB.Name = "highLvlB";
             this.highLvlB.Size = new System.Drawing.Size(98, 51);
@@ -145,6 +157,7 @@
             // 
             // lowLvlB
             // 
+            this.lowLvlB.Enabled = false;
             this.lowLvlB.Location = new System.Drawing.Point(1213, 87);
             this.lowLvlB.Name = "lowLvlB";
             this.lowLvlB.Size = new System.Drawing.Size(98, 51);
@@ -154,6 +167,7 @@
             // 
             // programaText
             // 
+            this.programaText.AcceptsTab = true;
             this.programaText.BackColor = System.Drawing.Color.DarkGray;
             this.programaText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.programaText.ForeColor = System.Drawing.Color.White;
@@ -175,12 +189,6 @@
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
             // 
-            // grámaticaToolStripMenuItem
-            // 
-            this.grámaticaToolStripMenuItem.Name = "grámaticaToolStripMenuItem";
-            this.grámaticaToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
-            this.grámaticaToolStripMenuItem.Text = "Grámatica";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -195,6 +203,7 @@
             this.Controls.Add(this.tabsimGrid);
             this.Controls.Add(this.cuadruplosGrid);
             this.Controls.Add(this.menuStrip1);
+            this.DoubleBuffered = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Form1";

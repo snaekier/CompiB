@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace CompiB
 {
+    [Serializable]
     struct ActionLog
     {
         public string Stack { get; set; }

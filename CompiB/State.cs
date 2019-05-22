@@ -11,6 +11,7 @@ namespace CompiB
     /// 
     /// Contiene dos diccionarios para terminales y no terminales, indexados por el token en forma de string.
     /// </summary> 
+    [Serializable]
     class State
     {
         Dictionary<string, Action> nonTerminals; // Conjunto de acciones de los no terminales
@@ -36,6 +37,7 @@ namespace CompiB
     /// A which means ACCEPT
     /// 
     /// </summary> 
+    [Serializable]
     struct Action
     {
         internal char action; // Puede ser 'S', 'R' u 'A'

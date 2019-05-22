@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace CompiB
 {
+    [Serializable]
     public class Production
     {
         /*string id;

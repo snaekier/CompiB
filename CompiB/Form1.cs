@@ -17,8 +17,11 @@ namespace CompiB
         string[] Reservadas = new string[] { "defid","CreaVentana","CreaLabel","CreaBoton",
                 "CreaTextbox","defmain","Click","if","else","repeat","until","while","switch","case",
                 "break","for","MessageBox","Loop","ImprimeTextBox","int","string","vent","textBox","label","boton","float"};
+        string[] simbolos = new string[] { "{", "}", "[", "]", ",", "(", ")", ":", ":=", ";", "*", "/", "-", "+", "^", "<","<=",">",">=","!=" };
         Timer timer;
         string sourceFilePath;
+        Parser parser;
+        List<Quad> currentQuads;
 
         public Form1()
         {
@@ -48,13 +51,13 @@ namespace CompiB
         /// <param name="e"></param>
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+            parser = new Parser(Helpers.DeSeralization2(), Helpers.DeSeralization());
         }
 
         private void programaText_TextChanged(object sender, EventArgs e)
         {
             posicion = programaText.SelectionStart;
-            ejecucion();
+           // ejecucion();
         }
 
         /// <summary>
@@ -80,6 +83,20 @@ namespace CompiB
                             inicio = this.programaText.Text.IndexOf(x, inicio);
                             this.programaText.Select(inicio, x.Length);
                             programaText.SelectionColor = Color.Blue;
+                            this.programaText.Select(posicion, 0);
+                            inicio = inicio + 1;
+                        }
+                    }
+                }
+                foreach(string y in simbolos)
+                {
+                    if (x.Length != 0)
+                    {
+                        if (x.Trim().Equals(y))
+                        {
+                            inicio = this.programaText.Text.IndexOf(x, inicio);
+                            this.programaText.Select(inicio, x.Length);
+                            programaText.SelectionColor = Color.Red;
                             this.programaText.Select(posicion, 0);
                             inicio = inicio + 1;
                         }
@@ -168,6 +185,110 @@ namespace CompiB
                 }
 
             }
+        }
+
+        /// <summary>
+        /// Muestra la tabla de AS
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void anaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            List<State> states = parser.States;
+            DataTable tabla = new DataTable();
+            for (int i = 0; i < states.Count; i++)
+            {
+
+                Dictionary<string, Action> allTokens = states[i].NonTerminals.Concat(states[i].Terminals).ToDictionary(x => x.Key, x => x.Value);
+
+                if (i == 0)
+                {
+                    DataColumn colEstado = new DataColumn();
+                    colEstado.ColumnName = "Estado";
+                    tabla.Columns.Add(colEstado);
+                    colEstado.ReadOnly = true;
+                    foreach (KeyValuePair<string, Action> token in allTokens)
+                    {
+
+                        DataColumn col = new DataColumn();
+                        col.ColumnName = token.Key.Replace("(", "PI").Replace(")", "PD").Replace("[", "CI").Replace("]", "CD");
+                        tabla.Columns.Add(col);
+                        col.ReadOnly = true;
+
+                    }
+
+                }
+
+                DataRow r = tabla.NewRow();
+
+                r[0] = i;
+                foreach (KeyValuePair<string, Action> token in allTokens)
+                {
+
+                    string k = token.Key.Replace("(", "PI").Replace(")", "PD").Replace("[", "CI").Replace("]", "CD");
+                    r[k] = token.Value;
+
+
+                }
+                tabla.Rows.Add(r);
+
+            }
+
+            TAS vent1 = new TAS(tabla);
+            vent1.Show();
+            
+        }
+
+        /// <summary>
+        /// Realiza la compilación del programa
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void compilarB_Click(object sender, EventArgs e)
+        {
+            if (parser.EvalString(programaText.Text)){
+                QuadGenerator quadGenerator = new QuadGenerator();
+                currentQuads = quadGenerator.Generate(parser.NodeStack.Peek());
+                muestraQuads();
+                MessageBox.Show("Todo correcto");
+                ejecutaB.Enabled = true;
+                lowLvlB.Enabled = true;
+                highLvlB.Enabled = true;
+            }else
+            {
+                MessageBox.Show("Error en la línea: "+parser.Lines, "Algo salio mal");
+                ejecutaB.Enabled = false;
+                lowLvlB.Enabled = false;
+                highLvlB.Enabled = false;
+            }
+        }
+
+        private void muestraQuads()
+        {
+            cuadruplosGrid.DataSource = currentQuads;
+        }
+
+        /// <summary>
+        /// Muestra una ventana con la grámatica
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void grámaticaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Gramatica grammar = new Gramatica();
+            grammar.Show();
+        }
+
+        private void tAASToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataTable tabla = new DataTable();
+            tabla.Columns.Add("Stack"); tabla.Columns.Add("Input"); tabla.Columns.Add("Action");
+            foreach (ActionLog log in parser.Log)
+            {
+                tabla.Rows.Add(log.Stack, log.Input, log.Action);
+            }
+            TAAS vent3 = new TAAS(tabla);
+            vent3.Show();
         }
     }
 }
