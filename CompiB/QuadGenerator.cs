@@ -28,37 +28,42 @@ namespace CompiB
 
         public void SwitchNodes(BinaryTreeNode node)
         {
-            int aux=0;
+            int aux = 0;
             switch (node.Content)
             {
-                
+
                 // Crea ventana 1: #5 en Parser
                 case "CV1":
                     string idV1 = node.Left.Left.Left.Content;
                     aux = LineaCod;
-                    Quads.Add(new Quad("idV", node.Left.Left.Right.Content, null, idV1,Quads.Count,LineaCod));
-                    Quads.Add(new Quad("posV", node.Left.Right.Left.Left.Content, node.Left.Right.Left.Right.Content, idV1, Quads.Count, LineaCod));
+                    Quads.Add(new Quad("idV", node.Left.Left.Right.Content, "null", idV1,Quads.Count, LineaCod));
+                    Quads.Add(new Quad("posV", node.Left.Right.Left.Left.Content, node.Left.Right.Left.Right.Content, idV1,Quads.Count, LineaCod));
                     Quads.Add(new Quad("tamV", node.Left.Right.Right.Left.Content, node.Left.Right.Right.Right.Content, idV1, Quads.Count, LineaCod));
                     LineaCod++;
                     node.Solved = true;
                     SwitchNodes(node.Right);
 
-                    Quads.Add(new Quad("endV", null, null, idV1, Quads.Count, aux));
-                    //LineaCod++;
+                    Quads.Add(new Quad("endV", "null", "null", idV1, Quads.Count, aux));
 
+                    break;
+
+                case "CV2":
+                    string idV2 = node.Left.Left.Left.Content;
+                    Quads.Add(new Quad("idV", node.Left.Left.Right.Content, "null", idV2, Quads.Count, LineaCod));
+                    node.Solved = true;
+                    SwitchNodes(node.Right);
+                    Quads.Add(new Quad("endV", "null", "null", idV2, Quads.Count, LineaCod));
                     break;
 
 
                 // # 7 en Parser
                 case ";":
-                    if (node.Left != null)
-                    {
-                        if (!node.Left.Solved)
-                            SwitchNodes(node.Left);
-                        node.Solved = true;
-                    }
-                        SwitchNodes(node.Right);
-                    
+                    if (node.Left != null && !node.Left.Solved)
+                        SwitchNodes(node.Left);
+                    node.Solved = true;
+
+                    SwitchNodes(node.Right);
+
                     break;
 
                 // Crea Boton: #9 en Parser
@@ -73,7 +78,7 @@ namespace CompiB
                     SwitchNodes(node.Right);
 
                     Quads.Add(new Quad("endB", null, null, idB, Quads.Count, aux));
-                   // LineaCod++;
+                    // LineaCod++;
 
                     break;
 
@@ -91,6 +96,7 @@ namespace CompiB
 
                     break;
 
+
                 // # 26 en Parser
                 case "sent-if":
                     SwitchNodes(node.Left);
@@ -99,7 +105,7 @@ namespace CompiB
                     LineaCod++;
                     SwitchNodes(node.Right);
                     ifCondition.OperandB = Quads.Count - 1;
-                    
+
                     break;
                 // #27 en Parser
                 case "sent-if-else":
@@ -110,7 +116,7 @@ namespace CompiB
                     SwitchNodes(node.Left.Right); // --> (else) --> (left)
                     ifElseCondition.OperandB = Quads.Count - 1;
                     SwitchNodes(node.Left.Right);
-                    
+
 
                     break;
 
@@ -118,14 +124,14 @@ namespace CompiB
 
                 // #31 en Parser 
                 case "while":
-
+                    var whileReturn = Quads.Count();
                     SwitchNodes(node.Left);
                     Quad condition = new Quad("GOTOFALSE", TempValuesStack.Pop(), null, null, Quads.Count, LineaCod);
                     LineaCod++;
                     Quads.Add(condition);
                     SwitchNodes(node.Right);
                     condition.OperandB = Quads.Count - 1;
-
+                    Quads.Add(new Quad("GOTO", whileReturn.ToString(), "null", "null", Quads.Count, LineaCod));
                     break;
                 // # 31 en Parser
                 case "do":
@@ -145,25 +151,20 @@ namespace CompiB
                     node.Solved = true;
 
                     break;
+
+
+                // Se hace correccion 
                 case ":=":
-                    if (!node.Right.Solved)
-                    {
-                        TempCounter++;
-                        string t = "t" + TempCounter.ToString();
-                        TempValuesStack.Push(t);
-                        /*Basandome en: // sent-assign->id := exp;*/
-                        Quads.Add(new Quad(":=", t, null, node.Left.Content, Quads.Count, LineaCod));
-                        LineaCod++;
-                        SwitchNodes(node.Right);
-                        node.Solved = true;
-                    }
-                    else
-                    {
-                        Quads.Add(new Quad(":=", node.Right.Content, null, node.Left.Content, Quads.Count, LineaCod));
-                        LineaCod++;
-                        node.Solved = true;
-                    }
+
+
+                    SwitchNodes(node.Left);
+                    SwitchNodes(node.Right);
+                    var r = TempValuesStack.Pop();
+                    var l = TempValuesStack.Pop();
+                    Quads.Add(new Quad(":=", r, "null", l, Quads.Count, LineaCod));
+                    LineaCod++;
                     break;
+
 
                 case "switch":
                     //Quads.Add(new Quad("swicth",null,null,node.Left.Content));
@@ -206,75 +207,87 @@ namespace CompiB
                     break;
 
                 case "+":
-                    if (!node.Right.Solved)
-                    {
-                        SwitchNodes(node.Right);
-                        Quads.Add(new Quad("+", TempValuesStack.Pop(), null, node.Left.Content, Quads.Count, LineaCod));
-                        node.Solved = true;
-                    }
-                    else
-                    {
-                        TempCounter++;
-                        string t = "t" + TempCounter.ToString();
-                        TempValuesStack.Push(t);
-                        Quads.Add(new Quad("+", node.Left.Content, node.Right.Content, t, Quads.Count, LineaCod));
-                    }
+                    GenericNode(node);
                     break;
+
                 case "*":
-                    if (!node.Right.Solved)
-                    {
-                        SwitchNodes(node.Right);
-                        Quads.Add(new Quad("*", TempValuesStack.Pop(), null, node.Left.Content, Quads.Count, LineaCod));
-                        node.Solved = true;
-                    }
-                    else
-                    {
-                        TempCounter++;
-                        string t = "t" + TempCounter.ToString();
-                        TempValuesStack.Push(t);
-                        Quads.Add(new Quad("*", node.Left.Content, node.Right.Content, t, Quads.Count, LineaCod));
-                    }
+                    GenericNode(node);
                     break;
                 case "-":
-                    if (!node.Right.Solved)
-                    {
-                        SwitchNodes(node.Right);
-                        Quads.Add(new Quad("-", TempValuesStack.Pop(), null, node.Left.Content, Quads.Count, LineaCod));
-                        node.Solved = true;
-                    }
-                    else
-                    {
-                        TempCounter++;
-                        string t = "t" + TempCounter.ToString();
-                        TempValuesStack.Push(t);
-                        Quads.Add(new Quad("-", node.Left.Content, node.Right.Content, t, Quads.Count, LineaCod));
-                    }
+                    //if (!node.Right.Solved)
+                    //{
+                    //    SwitchNodes(node.Right);
+                    //    Quads.Add(new Quad("-", TempValuesStack.Pop(), "null", node.Left.Content));
+                    //    node.Solved = true;
+                    //}
+                    //else
+                    //{
+                    //    TempCounter++;
+                    //    string t = "t" + TempCounter.ToString();
+                    //    TempValuesStack.Push(t);
+                    //    Quads.Add(new Quad("-", node.Left.Content, node.Right.Content, t));
+                    //}
+                    GenericNode(node);
                     break;
                 case "/":
-                    if (!node.Right.Solved)
-                    {
-                        SwitchNodes(node.Right);
-                        Quads.Add(new Quad("/", TempValuesStack.Pop(), null, node.Left.Content, Quads.Count, LineaCod));
-                        node.Solved = true;
-                    }
-                    else
-                    {
-                        TempCounter++;
-                        string t = "t" + TempCounter.ToString();
-                        TempValuesStack.Push(t);
-                        Quads.Add(new Quad("/", node.Left.Content, node.Right.Content, t, Quads.Count, LineaCod));
-                    }
+                    //if (!node.Right.Solved)
+                    //{
+                    //    SwitchNodes(node.Right);
+                    //    Quads.Add(new Quad("/", TempValuesStack.Pop(), "null", node.Left.Content));
+                    //    node.Solved = true;
+                    //}
+                    //else
+                    //{
+                    //    TempCounter++;
+                    //    string t = "t" + TempCounter.ToString();
+                    //    TempValuesStack.Push(t);
+                    //    Quads.Add(new Quad("/", node.Left.Content, node.Right.Content, t));
+                    //}
+                    GenericNode(node);
+                    break;
+
+                case "%":
+                    GenericNode(node);
+                    break;
+                case ">":
+                    GenericNode(node);
+                    break;
+                case "<":
+                    GenericNode(node);
+                    break;
+                case "!=":
+                    GenericNode(node);
+                    break;
+
+                case "==":
+                    GenericNode(node);
+                    break;
+
+                case "**":
+                    GenericNode(node);
+                    break;
+
+                // we try to catch here the variables and constants, validate existence in TABSIM etc
+                default:
+                    TempValuesStack.Push(node.Content);
                     break;
             }
 
         }
 
-
-
-
         private void GenericNode(BinaryTreeNode node)
         {
 
+
+
+            SwitchNodes(node.Left);
+            SwitchNodes(node.Right);
+            var rmod = TempValuesStack.Pop();
+            var lmod = TempValuesStack.Pop();
+            TempCounter++;
+            var tempMod = "T" + TempCounter.ToString();
+            TempValuesStack.Push(tempMod);
+            Quads.Add(new Quad(node.Content, lmod, rmod, tempMod,Quads.Count, LineaCod));
 
         }
     }
