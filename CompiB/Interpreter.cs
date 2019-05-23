@@ -208,12 +208,13 @@ namespace CompiB
 
         private void AddData(string resultVar, string keyVar)
         {
+            int n;bool b;
             if (simbTable.Keys.Contains(resultVar))
                 simbTable[keyVar] = simbTable[resultVar];
             else
             {
-                bool isNumeric = int.TryParse(resultVar, out int n);
-                bool isBoolean = bool.TryParse(resultVar, out bool b);
+                bool isNumeric = int.TryParse(resultVar, out n);
+                bool isBoolean = bool.TryParse(resultVar, out b);
                 if (isNumeric)
                     simbTable[keyVar] = n;
                 else if (isBoolean)
@@ -225,12 +226,13 @@ namespace CompiB
 
         private dynamic ExtractOperand(string Op)
         {
+            int n;bool b;
             if (simbTable.Keys.Contains(Op))
                 return simbTable[Op];
             else
             {
-                bool isNumeric = int.TryParse(Op, out int n);
-                bool isBoolean = bool.TryParse(Op, out bool b);
+                bool isNumeric = int.TryParse(Op, out n);
+                bool isBoolean = bool.TryParse(Op, out b);
                 if (isNumeric)
                     return n;
                 else if (isBoolean)

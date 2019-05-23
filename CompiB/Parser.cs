@@ -18,7 +18,9 @@ namespace CompiB
         int counter; // Contador de nodos visitados en DFSSearch
         List<Production> productions;
         int numLinea=1;
-        List<Simbolo> TabSim;
+        public List<Simbolo> TabSim;
+        Stack<BinaryTreeNode> auxArr;
+        List<Simbolo> auxTS;
 
        // internal List<Node> AFD;
         internal List<State> States { get { return states; } set { states = value; } }
@@ -35,6 +37,7 @@ namespace CompiB
             stackAnalysis = new List<TokenState>();
             log = new List<ActionLog>();
             nodesStack = new Stack<BinaryTreeNode>();
+            auxArr = new Stack<BinaryTreeNode>();
             operatorsStack = new Stack<string>();
 
             counter = 1;
@@ -44,7 +47,9 @@ namespace CompiB
         public bool EvalString(String inputString)
         {
             TabSim = new List<Simbolo>();
+            auxTS = new List<Simbolo>();
             nodesStack = new Stack<BinaryTreeNode>();
+            auxArr = new Stack<BinaryTreeNode>();
             numLinea = 1;
             bool valid = true;
             List<Token> inputTokens = new List<Token>();
@@ -306,7 +311,7 @@ namespace CompiB
                 case 30:
                     {
                         BinaryTreeNode b = nodesStack.Pop();
-                        BinaryTreeNode a = new BinaryTreeNode("[ ]", new BinaryTreeNode(p.Right[0].Val), new BinaryTreeNode(p.Right[2].Val));
+                        BinaryTreeNode a = new BinaryTreeNode(p.Right[0].Val + "[" + auxArr.Pop().Content + "]");
                         nodesStack.Push(new BinaryTreeNode(":=", a, b));
                     }
                     break;
@@ -379,32 +384,42 @@ namespace CompiB
                         nodesStack.Push(new BinaryTreeNode("MS", a, null));
                     }
                     break;
-                //sent-declara -> tipo identificadores    
+                //sent-declara -> tipo identificadores
                 case 39:
-                    {
-                        //        BinaryTreeNode a = new BinaryTreeNode(p.Right[0].Val, null, null);
-                        //        BinaryTreeNode b =  new BinaryTreeNode(p.Right[1].Val, null, null);
-                        //nodesStack.Push(new BinaryTreeNode("dec", a, b));
-                    }
+                    TabSim.AddRange(auxTS);
+                    auxTS = new List<Simbolo>();
                     break;
                 //sent-declara -> tipo [ indice ] identificadores
                 case 40:
                     {
-                        //         BinaryTreeNode a = new BinaryTreeNode(p.Right[4].Val, null, null);
-                        //         BinaryTreeNode b = new BinaryTreeNode("tam",new BinaryTreeNode(p.Right[0].Val, null, null),new BinaryTreeNode(p.Right[2].Val, null, null)) ;
-
-                        //nodesStack.Push(new BinaryTreeNode ("Arr", a, b)); 
+                        foreach(Simbolo s in auxTS)
+                        {
+                            s.Tipo += "["+auxArr.Pop().Content+"]";
+                        }
+                        TabSim.AddRange(auxTS);
+                        auxTS = new List<Simbolo>();
                     }
                     break;
-                //identificadores -> identificadores , id 	    
+                
+                //indice -> num    
                 case 41:
-                    {
-                        BinaryTreeNode b = nodesStack.Pop();
-                        BinaryTreeNode a = nodesStack.Pop();
-
-                        nodesStack.Push(new BinaryTreeNode("Identificadores", a, b));
-                    }
+                    auxArr.Push(new BinaryTreeNode(p.Right[0].Val));
                     break;
+
+                //indice->id
+                case 42:
+                    auxArr.Push(new BinaryTreeNode(p.Right[0].Val));
+                    break;
+
+                //identificadores -> identificadores , id
+                case 43:
+                    insertTabSim(p.Right[2].Val);
+                    break;
+
+                //identificadores -> id
+                case 44:
+                    insertTabSim(p.Right[0].Val);
+                    break; 
 
                 // exp -> exp-simple opcomparacion exp-simple
                 // exp-simple -> exp-simple opsuma term
@@ -458,7 +473,59 @@ namespace CompiB
                         nodesStack.Push(new BinaryTreeNode(p.Right[0].Val));
                     }
                     break;
+                //factor->id [ indice ]
+                case 62:
+                    {
+                        nodesStack.Push(new BinaryTreeNode(p.Right[0].Val+"["+auxArr.Pop().Content+"]"));
+                    }
+                    break;
             }
+        }
+
+        public void insertTabSim(string name)
+        {
+            Simbolo s;
+            switch (globalType)
+            {
+                case "int":
+                    s = new Simbolo(name, "0", globalType);
+                    break;
+                case "string":
+                    s = new Simbolo(name, "", globalType);
+                    break;
+                case "vent":
+                    s = new Simbolo(name, "0", globalType);
+                    break;
+                case "textBox":
+                    s = new Simbolo(name, "", globalType);
+                    break;
+                case "label":
+                    s = new Simbolo(name, "", globalType);
+                    break;
+                case "boton":
+                    s = new Simbolo(name, "", globalType);
+                    break;
+                case "float":
+                    s = new Simbolo(name, "0.0", globalType);
+                    break;
+                default:
+                    s = new Simbolo(name, "null", globalType);
+                    break;
+            }
+            
+            bool repeat = false;
+            for (int i = 0; i < TabSim.Count; i++)
+            {
+                if (name == TabSim[i].Nombre)
+                    repeat = true;
+            }
+            for (int i = 0; i < auxTS.Count; i++)
+            {
+                if (name == auxTS[i].Nombre)
+                    repeat = true;
+            }
+            if (!repeat)
+                auxTS.Add(s);
         }
     }
 }

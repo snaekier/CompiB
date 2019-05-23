@@ -249,7 +249,7 @@ namespace CompiB
             if (parser.EvalString(programaText.Text)){
                 QuadGenerator quadGenerator = new QuadGenerator();
                 currentQuads = quadGenerator.Generate(parser.NodeStack.Peek());
-                muestraQuads();
+                muestraQuads();muestraSim();
                 MessageBox.Show("Todo correcto");
                 ejecutaB.Enabled = true;
                 lowLvlB.Enabled = true;
@@ -261,6 +261,17 @@ namespace CompiB
                 lowLvlB.Enabled = false;
                 highLvlB.Enabled = false;
             }
+        }
+
+        private void muestraSim()
+        {
+            DataTable tabla = new DataTable();
+            tabla.Columns.Add("Nombre"); tabla.Columns.Add("Tipo"); tabla.Columns.Add("Valor");
+            foreach(Simbolo s in parser.TabSim)
+            {
+                tabla.Rows.Add(s.Nombre, s.Tipo, s.Valor);
+            }
+            tabsimGrid.DataSource = tabla;
         }
 
         private void muestraQuads()
