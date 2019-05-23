@@ -301,5 +301,10 @@ namespace CompiB
             TAAS vent3 = new TAAS(tabla);
             vent3.Show();
         }
+
+        private void ejecutaB_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

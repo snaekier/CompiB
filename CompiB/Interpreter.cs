@@ -180,11 +180,11 @@ namespace CompiB
                             res = Math.Sqrt(OperatorA);
                         simbTable.Add(keyVar, res);
                         break;
-                    case "goto":
+                    case "GOTO":
                         break;
-                    case "gotoF":
+                    case "GOTOTRUE":
                         break;
-                    case "gotoT":
+                    case "GOTOFALSE":
                         break;
                     case "idV":
                         break;
@@ -192,11 +192,19 @@ namespace CompiB
                         break;
                     case "tamV":
                         break;
+                    case "idT":
+                        break;
+                    case "posT":
+                        break;
+                    case "tamT":
+                        break;
                     case "idB":
                         break;
                     case "posB":
                         break;
                     case "tamB":
+                        break;
+                    case "endB":
                         break;
                     case "idL":
                         break;
