@@ -9,10 +9,10 @@ namespace CompiB
     class Simbolo
     {
         string tipo;
-        string valor;
+        object valor;
         string nombre;
 
-        public Simbolo(string n, string v, string t)
+        public Simbolo(string n, object v, string t)
         {
             nombre = n;
             tipo = t;
@@ -20,7 +20,7 @@ namespace CompiB
         }
 
         internal string Tipo { get { return tipo; } set { tipo = value; } }
-        internal string Valor { get { return valor; } set { valor = value; } }
+        internal object Valor { get { return valor; } set { valor = value; } }
         internal string Nombre { get { return nombre; } set { nombre = value; } }
     }
 }

@@ -269,7 +269,7 @@ namespace CompiB
             tabla.Columns.Add("Nombre"); tabla.Columns.Add("Tipo"); tabla.Columns.Add("Valor");
             foreach(Simbolo s in parser.TabSim)
             {
-                tabla.Rows.Add(s.Nombre, s.Tipo, s.Valor);
+                tabla.Rows.Add(s.Nombre, s.Tipo, s.Valor.ToString());
             }
             tabsimGrid.DataSource = tabla;
         }
