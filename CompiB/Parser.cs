@@ -75,11 +75,6 @@ namespace CompiB
                 while (cToken.Content == "sdl")
                 {
                     inputTokens.RemoveAt(0);
-                    if(change && nodesStack.Count != 0)
-                    {
-                        change = false;
-                        LStart = numLinea;
-                    }
                     numLinea++;
                     cToken = inputTokens.First();
                 }

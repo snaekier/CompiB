@@ -179,7 +179,7 @@ namespace CompiB
             csLexer.AddTokenRule(@"[\(\)\{\}\[\];,]", "DELIMITADOR");
             csLexer.Compile(RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.ExplicitCapture);
 
-
+            int nl = 1;
             foreach (string s in list)
             {
                 /*if (palabrasReservadas.Contains(s))
@@ -194,10 +194,13 @@ namespace CompiB
                         if (palabrasReservadas.Contains(t.Val))
                         {
                             t.Content = t.Val;
+                            
                         }
+                        t.NLinea = nl;
                         aux.Add(t);
                     }
                     aux.Add(new Token("sdl", true));
+                    nl++;
                     //aux.AddRange(csLexer.GetTokens(s).ToList());
                 }
                 //}

@@ -12,12 +12,13 @@ namespace CompiB
         string content;
         bool terminal; // Bandera para indicar si es terminal o no-terminal
         string val; // Guarda lexema o el resultado de evaluar un conjunto de atributos
+        int nlinea;
 
         //Getters and Setters
         public string Content { get { return content; } set { content = value; } }
         public bool IsTerminal { get { return terminal; } set { terminal = value; } }
         public string Val { get { return val; } set { val = value; } }
-
+        public int NLinea { get { return nlinea; } set { nlinea = value; } }
 
         public Token(string s, bool t)
         {
