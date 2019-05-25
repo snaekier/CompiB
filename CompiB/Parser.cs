@@ -22,6 +22,8 @@ namespace CompiB
         Stack<BinaryTreeNode> auxArr;
         List<Simbolo> auxTS;
 
+        public int LStart;
+
        // internal List<Node> AFD;
         internal List<State> States { get { return states; } set { states = value; } }
         internal List<ActionLog> Log { get { return log; } set { log = value; } }
@@ -43,7 +45,7 @@ namespace CompiB
             counter = 1;
 
         }
-
+        
         public bool EvalString(String inputString)
         {
             TabSim = new List<Simbolo>();
@@ -51,6 +53,7 @@ namespace CompiB
             nodesStack = new Stack<BinaryTreeNode>();
             auxArr = new Stack<BinaryTreeNode>();
             numLinea = 1;
+            bool change=true;
             bool valid = true;
             List<Token> inputTokens = new List<Token>();
             input = inputString;
@@ -71,9 +74,14 @@ namespace CompiB
                 Action nextAction;
                 while (cToken.Content == "sdl")
                 {
-                    numLinea++;
                     inputTokens.RemoveAt(0);
-                    cToken= inputTokens.First();
+                    if(change && nodesStack.Count != 0)
+                    {
+                        change = false;
+                        LStart = numLinea;
+                    }
+                    numLinea++;
+                    cToken = inputTokens.First();
                 }
                 // Imprimir pila de A.S.
 
@@ -154,7 +162,7 @@ namespace CompiB
                     }
 
                     SemanticAnalysis(productionAux, nextAction.state); //Aqui se hacen las reducciones
-
+                    
                     int newState;
                     TokenState lastState = stackAnalysis.Last();
 

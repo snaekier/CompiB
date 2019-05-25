@@ -48,8 +48,8 @@ namespace CompiB
                     break;
 
                 case "CV2":
-                    string idV2 = node.Left.Left.Left.Content;
-                    Quads.Add(new Quad("idV", node.Left.Left.Right.Content, "null", idV2, Quads.Count, LineaCod));
+                    string idV2 = node.Left.Left.Content;
+                    Quads.Add(new Quad("idV", node.Left.Right.Content, "null", idV2, Quads.Count, LineaCod));
                     node.Solved = true;
                     SwitchNodes(node.Right);
                     Quads.Add(new Quad("endV", "null", "null", idV2, Quads.Count, LineaCod));

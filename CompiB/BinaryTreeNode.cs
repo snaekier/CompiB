@@ -14,6 +14,7 @@ namespace CompiB
         Boolean visited;
         Boolean solved;
         int id;
+        int line;
 
         internal BinaryTreeNode Right { get { return right; } set { right = value; } }
         internal BinaryTreeNode Left { get { return left; } set { left = value; } }
@@ -21,12 +22,14 @@ namespace CompiB
         public bool Visited { get { return visited; } set { visited = value; } }
         public int Id { get { return id; } set { id = value; } }
         public bool Solved { get { return solved; } set { solved = value; } }
+        public int Line { get { return line; } set { line = value; } }
 
         public BinaryTreeNode(String content)
         {
             Content = content;
             Visited = false;
             Id = 0;
+            line = -1;
         }
 
         public BinaryTreeNode(String content, BinaryTreeNode left, BinaryTreeNode right)
@@ -36,6 +39,7 @@ namespace CompiB
             Right = right;
             Visited = false;
             Id = 0;
+            line = -1;
         }
     }
 }
