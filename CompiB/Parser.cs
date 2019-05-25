@@ -141,6 +141,7 @@ namespace CompiB
                         {
                             itState.dirty = true;
                             r.Val = itState.token.Val;
+                            r.NLinea = itState.token.NLinea;
                             productionAux.Right.Add(r);
                         }
                     }
