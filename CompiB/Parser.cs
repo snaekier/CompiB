@@ -51,7 +51,7 @@ namespace CompiB
             nodesStack = new Stack<BinaryTreeNode>();
             auxArr = new Stack<BinaryTreeNode>();
             operatorsStack = new Stack<string>();
-            renderer = new Renderer(@"C:\Program Files\Graphviz2.38\bin");
+            renderer = new Renderer(@"C:\Program Files (x86)\Graphviz2.38\bin"); //aquí debe ir la ruta de Graphviz
             graphVizEdges = new List<EdgeStatement>();
             graphVizNodes = new List<NodeStatement>();
 
@@ -562,6 +562,8 @@ namespace CompiB
                 .AddRange(graphVizEdges)
                 .AddRange(graphVizNodes);
 
+            //si te da un error aquí es porque no está bien la ruta de Graphviz
+            //casi al inicio de este archivo puesdes encontrarla.
             using (Stream file = File.Create("semantic_tree.png"))
             {
                 await renderer.RunAsync(

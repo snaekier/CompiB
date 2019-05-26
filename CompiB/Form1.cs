@@ -310,7 +310,7 @@ namespace CompiB
 
         private void ejecutaB_Click(object sender, EventArgs e)
         {
-
+            Interpreter interpreter = new Interpreter(currentQuads);
         }
     }
 }
