@@ -24,12 +24,19 @@ namespace CompiB
         public bool Solved { get { return solved; } set { solved = value; } }
         public int Line { get { return line; } set { line = value; } }
 
-        public BinaryTreeNode(String content)
+        public BinaryTreeNode(String content, int line)
         {
             Content = content;
             Visited = false;
             Id = 0;
             line = -1;
+        }
+        public BinaryTreeNode(Token t)
+        {
+            Content = t.Val;
+            Visited = false;
+            Id = 0;
+            line = t.NLinea;
         }
 
         public BinaryTreeNode(String content, BinaryTreeNode left, BinaryTreeNode right)
@@ -40,6 +47,16 @@ namespace CompiB
             Visited = false;
             Id = 0;
             line = -1;
+        }
+
+        public BinaryTreeNode(Token t, BinaryTreeNode left, BinaryTreeNode right)
+        {
+            Content = t.Val;
+            Left = left;
+            Right = right;
+            Visited = false;
+            Id = 0;
+            line = t.NLinea;
         }
     }
 }
