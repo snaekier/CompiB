@@ -8,37 +8,42 @@ namespace CompiB
 {
     class Interpreter
     {
-        Dictionary<string, dynamic> simbTable;
+        Dictionary<string, dynamic> simbTable = new Dictionary<string, dynamic>();
         List<Quad> quadsList;
 
         public Interpreter(List<Quad> quads)
         {
-            ExeAllQuads(); //solo por test 
+            int index = 0;
+            quadsList = quads;
+            //GenerateManualQuads();
+            ExeAllQuads(index); //solo por test 
         }
 
-        public void ExeAllQuads()
+        public void ExeAllQuads(int i)
         {
             // Usa ReadQuads dandole el indice inicial y recuperar el siguiente 
-            int i = 0;
-            while (i >= quadsList.Count - 1)
+            
+            
+            while (i <= quadsList.Count - 1 && i != -1)
             {
                 i = ReadQuads(i);
             }
         }
 
-        //private void GenerateManualQuads()
-        //{
-        //    quadsList.Add(new Quad(":=", "2000", null, "numero", 0, 1));
-        //    quadsList.Add(new Quad(":=", "0", null, "dato", 1, 2));
-        //    quadsList.Add(new Quad(">", "numero", "1000", "t1", 2, 3));
-        //    quadsList.Add(new Quad("gotoF", "t1", "10", null, 3, 3));
-        //    quadsList.Add(new Quad("-", "numero", "1", "t2", 4, 4));
-        //    quadsList.Add(new Quad(":=", "t2", null, "numero", 5, 4));
-        //    quadsList.Add(new Quad("+", "dato", "1", "t3", 6, 5));
-        //    quadsList.Add(new Quad(":=", "t3", null, "dato", 7, 5));
-        //    quadsList.Add(new Quad("goto", "3", null, null, 8, 6));
-        //    quadsList.Add(new Quad("end", null, null, null, 9, 7));
-        //}
+        private void GenerateManualQuads()
+        {
+            quadsList = new List<Quad>();
+            quadsList.Add(new Quad(":=", "2", null, "numero", 0, 1));
+            quadsList.Add(new Quad(":=", "0", null, "dato", 1, 2));
+            quadsList.Add(new Quad("/", "numero", "2", "t1", 2, 3));
+            quadsList.Add(new Quad("goto", "6", null, null, 3, 3));
+            quadsList.Add(new Quad("-", "numero", "1", "t2", 4, 4));
+            quadsList.Add(new Quad(":=", "t2", null, "numero", 5, 4));
+            quadsList.Add(new Quad("+", "dato", "1", "t3", 6, 5));
+            quadsList.Add(new Quad(":=", "t3", null, "dato", 7, 5));
+            quadsList.Add(new Quad("goto", "3", null, null, 8, 6));
+            quadsList.Add(new Quad("end", null, null, null, 9, 7));
+        }
 
         private int ReadQuads(int i)
         {
@@ -47,7 +52,13 @@ namespace CompiB
             dynamic OperatorA;
             dynamic OperatorB;
             bool res;
+            int resOp = -1;
             int nextIndex = -1;
+            int n;
+            bool isNumericOpA; 
+            bool isNumericOpB;
+            string resCadena = "";
+            double resOp2 = -1;
             switch (quadsList[i].Operator)
             {
                 case ":=":
@@ -60,7 +71,8 @@ namespace CompiB
                         simbTable.Add(keyVar, null);
                         AddData(OpA, keyVar);
                     }
-                    nextIndex = i++;
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case "<":
                     keyVar = quadsList[i].Result.ToString();
@@ -73,7 +85,8 @@ namespace CompiB
                     //resultado de <
                     res = OperatorA < OperatorB;
                     simbTable.Add(keyVar, res);
-                    nextIndex = i++;
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case "<=":
                     keyVar = quadsList[i].Result.ToString();
@@ -85,7 +98,8 @@ namespace CompiB
                     //resultado de <=
                     res = OperatorA <= OperatorB;
                     simbTable.Add(keyVar, res);
-                    nextIndex = i++;
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case ">":
                     keyVar = quadsList[i].Result.ToString();
@@ -97,7 +111,8 @@ namespace CompiB
                     //resultado de >
                     res = OperatorA > OperatorB;
                     simbTable.Add(keyVar, res);
-                    nextIndex = i++;
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case ">=":
                     keyVar = quadsList[i].Result.ToString();
@@ -109,7 +124,8 @@ namespace CompiB
                     //resultado de >=
                     res = OperatorA >= OperatorB;
                     simbTable.Add(keyVar, res);
-                    nextIndex = i++;
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case "+":
                     //TODO concatenar aun no esta 
@@ -119,10 +135,23 @@ namespace CompiB
                     OpB = quadsList[i].OperandB.ToString();
                     OperatorB = ExtractOperand(OpB);
 
-                    //resultado de +
-                    res = OperatorA + OperatorB;
-                    simbTable.Add(keyVar, res);
-                    nextIndex = i++;
+                    isNumericOpA = int.TryParse(OpA, out n);
+                    isNumericOpB = int.TryParse(OpB, out n);
+
+                    if (isNumericOpA && isNumericOpB)
+                    {
+                        //resultado de int + int
+                        resOp = OperatorA + OperatorB;
+                        simbTable.Add(keyVar, resOp);
+                    }
+                    else
+                    {
+                        //resultado de string + string
+                        resCadena = OperatorA + OperatorB;
+                        simbTable.Add(keyVar, resCadena);
+                    }                    
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case "-":
                     keyVar = quadsList[i].Result.ToString();
@@ -132,9 +161,10 @@ namespace CompiB
                     OperatorB = ExtractOperand(OpB);
 
                     //resultado de -
-                    res = OperatorA - OperatorB;
-                    simbTable.Add(keyVar, res);
-                    nextIndex = i++;
+                    resOp = OperatorA - OperatorB;
+                    simbTable.Add(keyVar, resOp);
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case "*":
                     keyVar = quadsList[i].Result.ToString();
@@ -144,9 +174,10 @@ namespace CompiB
                     OperatorB = ExtractOperand(OpB);
 
                     //resultado de *
-                    res = OperatorA * OperatorB;
-                    simbTable.Add(keyVar, res);
-                    nextIndex = i++;
+                    resOp = OperatorA * OperatorB;
+                    simbTable.Add(keyVar, resOp);
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case "/":
                     keyVar = quadsList[i].Result.ToString();
@@ -156,9 +187,10 @@ namespace CompiB
                     OperatorB = ExtractOperand(OpB);
 
                     //resultado de /
-                    res = OperatorA / OperatorB;
-                    simbTable.Add(keyVar, res);
-                    nextIndex = i++;
+                    resOp = OperatorA / OperatorB;
+                    simbTable.Add(keyVar, resOp);
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case "^":
                     keyVar = quadsList[i].Result.ToString();
@@ -170,31 +202,38 @@ namespace CompiB
                     //resultado de ^
                     //checar si es menor de 0 la potencia, es una raiz cuadrada
                     if (OperatorB >= 1)
-                        res = Math.Pow(OperatorA, OperatorB);
+                        resOp2 = Math.Pow(OperatorA, OperatorB);
                     else
-                        res = Math.Sqrt(OperatorA);
-                    simbTable.Add(keyVar, res);
-                    nextIndex = i++;
+                        resOp2 = Math.Sqrt(OperatorA);
+                    simbTable.Add(keyVar, resOp2);
+                    nextIndex = i;
+                    nextIndex++;
                     break;
-                case "GOTO":
+                case "goto":
                     OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
-                    nextIndex = OperatorA;
+                    nextIndex = OperatorA - 1;
                     break;
-                case "GOTOTRUE":
+                case "gotoT":
                     OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
                     OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
                     if (OperatorA)
-                        nextIndex = OperatorB;
+                        nextIndex = OperatorB - 1;
                     else
-                        nextIndex = i++;
+                    {
+                        nextIndex = i;
+                        nextIndex++;
+                    }
                     break;
-                case "GOTOFALSE":
+                case "gotoF":
                     OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
                     OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
                     if (!OperatorA)
-                        nextIndex = OperatorB;
+                        nextIndex = OperatorB - 1;
                     else
-                        nextIndex = i++;
+                    {
+                        nextIndex = i;
+                        nextIndex++;
+                    }
                     break;
                 case "idV": //inicializa ventana
                     keyVar = quadsList[i].Result.ToString();
@@ -203,7 +242,8 @@ namespace CompiB
                     VF.id = keyVar;
                     VF.text = OperatorA;
                     simbTable.Add(keyVar, VF);
-                    nextIndex = i++;
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case "posV":
                     keyVar = quadsList[i].Result.ToString();
@@ -211,7 +251,8 @@ namespace CompiB
                     OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
                     simbTable[keyVar].posX = OperatorA;
                     simbTable[keyVar].posY = OperatorB;
-                    nextIndex = i++;
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case "tamV": //crea una ventana
                     keyVar = quadsList[i].Result.ToString();
@@ -221,7 +262,8 @@ namespace CompiB
                     simbTable[keyVar].tamY = OperatorB;
 
                     simbTable[keyVar].Create();
-                    nextIndex = i++;
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case "idT": //inicializa txtBox
                     keyVar = quadsList[i].Result.ToString();
@@ -230,7 +272,8 @@ namespace CompiB
                     TF.id = keyVar;
                     TF.text = OperatorA;                    //<- TODO checar eso
                     simbTable.Add(keyVar, TF);
-                    nextIndex = i++;
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case "posT":
                     keyVar = quadsList[i].Result.ToString();
@@ -238,7 +281,8 @@ namespace CompiB
                     OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
                     simbTable[keyVar].posX = OperatorA;
                     simbTable[keyVar].posY = OperatorB;
-                    nextIndex = i++;
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case "tamT": //crea un txtBox
                     keyVar = quadsList[i].Result.ToString();
@@ -248,7 +292,8 @@ namespace CompiB
                     simbTable[keyVar].tamY = OperatorB;
 
                     simbTable[keyVar].Create();
-                    nextIndex = i++;
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case "idB": //inicializa un Boton
                     keyVar = quadsList[i].Result.ToString();
@@ -257,7 +302,8 @@ namespace CompiB
                     BF.id = keyVar;
                     BF.text = OperatorA;
                     simbTable.Add(keyVar, BF);
-                    nextIndex = i++;
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case "posB":
                     keyVar = quadsList[i].Result.ToString();
@@ -265,7 +311,8 @@ namespace CompiB
                     OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
                     simbTable[keyVar].posX = OperatorA;
                     simbTable[keyVar].posY = OperatorB;
-                    nextIndex = i++;
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case "tamB": //crea un Boton y 
                     keyVar = quadsList[i].Result.ToString();
@@ -283,7 +330,8 @@ namespace CompiB
                     LF.id = keyVar;
                     LF.text = OperatorA;
                     simbTable.Add(keyVar, LF);
-                    nextIndex = i++;
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case "posL": //crea un Label
                     keyVar = quadsList[i].Result.ToString();
@@ -293,15 +341,18 @@ namespace CompiB
                     simbTable[keyVar].posY = OperatorB;
 
                     simbTable[keyVar].Create();
-                    nextIndex = i++;
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case "endB":
                     // talvez se tenga que hacer algo aqui
-                    nextIndex = i++;
+                    nextIndex = i;
+                    nextIndex++;
                     break;
                 case "endV":
                     //tambien aqui
-                    nextIndex = i++;
+                    nextIndex = i;
+                    nextIndex++;
                     break;
             }
             return nextIndex;
