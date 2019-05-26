@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Shields.GraphViz.Components;
+using Shields.GraphViz.Models;
+using Shields.GraphViz.Services;
 
 namespace CompiB
 {
@@ -31,6 +36,11 @@ namespace CompiB
         internal int Lines { get { return numLinea; } }
         internal Stack<BinaryTreeNode> NodeStack { get { return nodesStack; } }
 
+        // Stuff for graphviz
+        List<EdgeStatement> graphVizEdges;
+        List<NodeStatement> graphVizNodes;
+        IRenderer renderer;
+
         public Parser(List<Production> p, List<State> s/*List<Node> AFDList*/)
         {
             productions = p;
@@ -41,6 +51,9 @@ namespace CompiB
             nodesStack = new Stack<BinaryTreeNode>();
             auxArr = new Stack<BinaryTreeNode>();
             operatorsStack = new Stack<string>();
+            renderer = new Renderer(@"C:\Program Files\Graphviz2.38\bin");
+            graphVizEdges = new List<EdgeStatement>();
+            graphVizNodes = new List<NodeStatement>();
 
             counter = 1;
 
@@ -174,10 +187,10 @@ namespace CompiB
             // TODO: Descomentar cuando esten todos los esquemas de traduccion
             if (valid)
             {
-               /* graphVizEdges.Clear();
+                graphVizEdges.Clear();
                 counter = 1;
                 DFSSearch(nodesStack.Peek());
-                CreateGraphFile();*/
+                CreateGraphFile();
             }
 
             return valid;
@@ -241,6 +254,7 @@ namespace CompiB
                 // def-ctrl -> CreaTextbox ( id , num , num , num , num ) ;
                 case 10:
                     {
+
                         BinaryTreeNode a = new BinaryTreeNode(p.Right[2].Val);
                         BinaryTreeNode b = new BinaryTreeNode("posT", new BinaryTreeNode(p.Right[4].Val), new BinaryTreeNode(p.Right[6].Val));
                         BinaryTreeNode c = new BinaryTreeNode("tamT", new BinaryTreeNode(p.Right[8].Val), new BinaryTreeNode(p.Right[10].Val));
@@ -530,6 +544,80 @@ namespace CompiB
             }
             if (!repeat)
                 auxTS.Add(s);
+        }
+
+
+        private async void CreateGraphFile()
+        {
+            var graph = Graph.Directed
+                .Add(AttributeStatement.Graph.Set("labelloc", "t"))
+                .Add(AttributeStatement.Graph.Set("bgcolor", "#EDEDED"))
+                .Add(AttributeStatement.Node.Set("style", "filled"))
+                .Add(AttributeStatement.Node.Set("color", "#000000"))
+                .Add(AttributeStatement.Node.Set("fillcolor", "#1b4891"))
+                .Add(AttributeStatement.Node.Set("fontcolor", "#FFFFFF"))
+                 .Add(AttributeStatement.Node.Set("fontname", "Arial"))
+                .Add(AttributeStatement.Graph.Set("label", "Árbol Semántico"))
+                .AddRange(graphVizEdges)
+                .AddRange(graphVizNodes);
+
+            using (Stream file = File.Create("semantic_tree.png"))
+            {
+                await renderer.RunAsync(
+                    graph, file,
+                    RendererLayouts.Dot,
+                    RendererFormats.Png,
+                    CancellationToken.None);
+            }
+        }
+
+        /// <summary>
+        /// Iterate over graph to create graphviz visualization.
+        /// </summary>
+        private void DFSSearch(BinaryTreeNode parent)
+        {
+            var parentId = parent.Content + " " + counter;
+
+
+            if (parent.Id == 0)
+                parent.Id = counter;
+
+            parent.Visited = true;
+
+            var parentNode = Shields.GraphViz.Models.NodeStatement.For(parentId);
+            parentNode=parentNode.Set("label", parent.Content);
+            graphVizNodes.Add(parentNode);
+
+
+            counter++;
+            if (parent.Left != null && !parent.Left.Visited)
+            {
+                var leftId = parent.Left.Content + " " + counter;
+
+                parent.Left.Id = counter;
+                
+                var leftNode= Shields.GraphViz.Models.NodeStatement.For(leftId);
+                leftNode= leftNode.Set("label", parent.Left.Content);
+                graphVizNodes.Add(leftNode);
+               
+
+                graphVizEdges.Add(EdgeStatement.For(parentId, leftId));
+                DFSSearch(parent.Left);
+            }
+            if (parent.Right != null && !parent.Right.Visited)
+            {
+                var rightId = parent.Right.Content + " " + counter;
+
+                parent.Right.Id = counter;
+
+                var rightNode = Shields.GraphViz.Models.NodeStatement.For(rightId);
+                rightNode= rightNode.Set("label",parent.Right.Content);
+               
+                graphVizNodes.Add(rightNode);
+
+                graphVizEdges.Add(EdgeStatement.For(parentId, rightId));
+                DFSSearch(parent.Right);
+            }
         }
     }
 }

@@ -46,8 +46,10 @@ namespace CompiB
                     Quads.Add(new Quad("endV", "null", "null", idV1, Quads.Count, aux));
 
                     break;
-
+                //Crea ventana 1: #6 en Parser
                 case "CV2":
+                    
+
                     string idV2 = node.Left.Left.Content;
                     Quads.Add(new Quad("idV", node.Left.Right.Content, "null", idV2, Quads.Count, LineaCod));
                     node.Solved = true;
@@ -80,6 +82,12 @@ namespace CompiB
                     Quads.Add(new Quad("endB", null, null, idB, Quads.Count, aux));
                     // LineaCod++;
 
+                    break;
+
+                case "CT":
+                    Quads.Add(new Quad("txtB", "null", "null", node.Left.Content, 255, 255));
+                    Quads.Add(new Quad("posT", node.Right.Left.Left.Content, node.Right.Left.Right.Content, node.Left.Content,255,255));
+                    Quads.Add(new Quad("tamT", node.Right.Right.Left.Content, node.Right.Right.Right.Content, node.Left.Content, 255, 255));
                     break;
 
 
@@ -119,8 +127,31 @@ namespace CompiB
 
 
                     break;
+                // # 28 en Parser
+                case "repeat":
+                    int quadIndexRepeat = Quads.Count - 1;
+                    SwitchNodes(node.Left);
+                    SwitchNodes(node.Right);
+                    Quads.Add(new Quad("GOTOTRUE", TempValuesStack.Pop(), quadIndexRepeat.ToString(), null, Quads.Count, LineaCod));
+                    LineaCod++;
+                    break;
 
+                // # 29 en Parser
+                // Se hace correccion 
+                case ":=":
+                    SwitchNodes(node.Left);
+                    SwitchNodes(node.Right);
+                    var r = TempValuesStack.Pop();
+                    var l = TempValuesStack.Pop();
+                    Quads.Add(new Quad(":=", r, "null", l, Quads.Count, LineaCod));
+                    LineaCod++;
+                    break;
 
+                // # 30 en Parser   Asignacion a arreglo [:= |valor a asignar | indice  | variable tipo arreglo|]
+                //case "Arr:=exp":
+                //    SwitchNodes(node.Right);
+                //    Quads.Add(new Quad(":=",TempValuesStack.Pop(),node.Left.Right.Content,node.Left.Left.Content,255,255));
+                //    break;
 
                 // #31 en Parser 
                 case "while":
@@ -133,7 +164,7 @@ namespace CompiB
                     condition.OperandB = Quads.Count - 1;
                     Quads.Add(new Quad("GOTO", whileReturn.ToString(), "null", "null", Quads.Count, LineaCod));
                     break;
-                // # 31 en Parser
+                // # 32 en Parser
                 case "do":
                     int quadIndex = Quads.Count - 1;
                     SwitchNodes(node.Left);
@@ -142,30 +173,19 @@ namespace CompiB
                     LineaCod++;
                     break;
 
-                case "CT":
-                    string idT = node.Left.Content;
-                    Quads.Add(new Quad("idT", node.Left.Content, null, idT, Quads.Count, LineaCod));
-                    Quads.Add(new Quad("postT", node.Right.Left.Left.Content, node.Right.Left.Right.Content, idT, Quads.Count, LineaCod));
-                    Quads.Add(new Quad("tamT", node.Right.Right.Left.Content, node.Right.Right.Right.Content, idT, Quads.Count, LineaCod));
-                    LineaCod++;
-                    node.Solved = true;
+                //case "CT":
+                //    string idT = node.Left.Content;
+                //    Quads.Add(new Quad("idT", node.Left.Content, null, idT, Quads.Count, LineaCod));
+                //    Quads.Add(new Quad("postT", node.Right.Left.Left.Content, node.Right.Left.Right.Content, idT, Quads.Count, LineaCod));
+                //    Quads.Add(new Quad("tamT", node.Right.Right.Left.Content, node.Right.Right.Right.Content, idT, Quads.Count, LineaCod));
+                //    LineaCod++;
+                //    node.Solved = true;
 
-                    break;
+                //    break;
 
+               
 
-                // Se hace correccion 
-                case ":=":
-
-
-                    SwitchNodes(node.Left);
-                    SwitchNodes(node.Right);
-                    var r = TempValuesStack.Pop();
-                    var l = TempValuesStack.Pop();
-                    Quads.Add(new Quad(":=", r, "null", l, Quads.Count, LineaCod));
-                    LineaCod++;
-                    break;
-
-
+                // # 33 en Parser
                 case "switch":
                     //Quads.Add(new Quad("swicth",null,null,node.Left.Content));
 
@@ -173,6 +193,7 @@ namespace CompiB
                     SwitchNodes(node.Right);
 
                     break;
+                // # 34 en Parser
                 case "case-sep":
                     Quad caseSepTemp = new Quad("GOTOFALSE", null, null, null, Quads.Count, LineaCod);
                     Quads.Add(caseSepTemp);
@@ -183,7 +204,7 @@ namespace CompiB
                     SwitchNodes(node.Right);
 
                     break;
-
+                // # 36 en Parser
                 case "case":
                     TempCounter++;
                     string tmp = "T" + TempCounter.ToString();
@@ -199,9 +220,9 @@ namespace CompiB
                     SwitchNodes(node.Right);
                     /***********************************************************************/
                     break;
-
+                
                 case "MS":
-                    Quads.Add(new Quad("MS", node.Left.Content, null, node.Content, Quads.Count, LineaCod));
+                    Quads.Add(new Quad("MS", "null", "null", node.Left.Content, Quads.Count, LineaCod));
                     LineaCod++;
                     node.Solved = true;
                     break;
@@ -214,34 +235,12 @@ namespace CompiB
                     GenericNode(node);
                     break;
                 case "-":
-                    //if (!node.Right.Solved)
-                    //{
-                    //    SwitchNodes(node.Right);
-                    //    Quads.Add(new Quad("-", TempValuesStack.Pop(), "null", node.Left.Content));
-                    //    node.Solved = true;
-                    //}
-                    //else
-                    //{
-                    //    TempCounter++;
-                    //    string t = "t" + TempCounter.ToString();
-                    //    TempValuesStack.Push(t);
-                    //    Quads.Add(new Quad("-", node.Left.Content, node.Right.Content, t));
+                   
                     //}
                     GenericNode(node);
                     break;
                 case "/":
-                    //if (!node.Right.Solved)
-                    //{
-                    //    SwitchNodes(node.Right);
-                    //    Quads.Add(new Quad("/", TempValuesStack.Pop(), "null", node.Left.Content));
-                    //    node.Solved = true;
-                    //}
-                    //else
-                    //{
-                    //    TempCounter++;
-                    //    string t = "t" + TempCounter.ToString();
-                    //    TempValuesStack.Push(t);
-                    //    Quads.Add(new Quad("/", node.Left.Content, node.Right.Content, t));
+                  
                     //}
                     GenericNode(node);
                     break;
