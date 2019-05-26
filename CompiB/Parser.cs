@@ -203,14 +203,15 @@ namespace CompiB
                 // def-vent -> CreaVentana ( id , cadena , num , num1 , num2 , num3 ) { secuencia-ctrl }
                 case 5:
                     {
-                        BinaryTreeNode a = new BinaryTreeNode("idV", new BinaryTreeNode(p.Right[2].Val), new BinaryTreeNode(p.Right[4].Val));
-                        BinaryTreeNode b = new BinaryTreeNode("posV", new BinaryTreeNode(p.Right[6].Val), new BinaryTreeNode(p.Right[8].Val));
-                        BinaryTreeNode c = new BinaryTreeNode("tamV", new BinaryTreeNode(p.Right[10].Val), new BinaryTreeNode(p.Right[12].Val));
+                        BinaryTreeNode a = new BinaryTreeNode("idV", new BinaryTreeNode(p.Right[2]), new BinaryTreeNode(p.Right[4]));
+                        BinaryTreeNode b = new BinaryTreeNode("posV", new BinaryTreeNode(p.Right[6]), new BinaryTreeNode(p.Right[8]));
+                        BinaryTreeNode c = new BinaryTreeNode("tamV", new BinaryTreeNode(p.Right[10]), new BinaryTreeNode(p.Right[12]));
                         BinaryTreeNode n = new BinaryTreeNode("vista", b, c);
                         
                         b = new BinaryTreeNode("at", a, n);
                         c = nodesStack.Pop();
-
+                         
+                        
                         nodesStack.Push(new BinaryTreeNode("CV1", b, c));
                     }
                     break;
@@ -218,7 +219,7 @@ namespace CompiB
                 // def-vent -> CreaVentana ( id , cadena ) { secuencia-ctrl }
                 case 6:
                     {
-                        BinaryTreeNode a = new BinaryTreeNode("idV", new BinaryTreeNode(p.Right[2].Val), new BinaryTreeNode(p.Right[4].Val));
+                        BinaryTreeNode a = new BinaryTreeNode("idV", new BinaryTreeNode(p.Right[2]), new BinaryTreeNode(p.Right[4]));
                         BinaryTreeNode b = nodesStack.Pop();
 
                         nodesStack.Push(new BinaryTreeNode("CV2", a, b));
@@ -238,9 +239,9 @@ namespace CompiB
                 // def-ctrl -> CreaBoton ( id , cadena , num , num , num , num ) { def-evnt }
                 case 9:
                     {
-                        BinaryTreeNode a = new BinaryTreeNode("idB", new BinaryTreeNode(p.Right[2].Val), new BinaryTreeNode(p.Right[4].Val));
-                        BinaryTreeNode b = new BinaryTreeNode("posB", new BinaryTreeNode(p.Right[6].Val), new BinaryTreeNode(p.Right[8].Val));
-                        BinaryTreeNode c = new BinaryTreeNode("tamB", new BinaryTreeNode(p.Right[10].Val), new BinaryTreeNode(p.Right[12].Val));
+                        BinaryTreeNode a = new BinaryTreeNode("idB", new BinaryTreeNode(p.Right[2]), new BinaryTreeNode(p.Right[4]));
+                        BinaryTreeNode b = new BinaryTreeNode("posB", new BinaryTreeNode(p.Right[6]), new BinaryTreeNode(p.Right[8]));
+                        BinaryTreeNode c = new BinaryTreeNode("tamB", new BinaryTreeNode(p.Right[10]), new BinaryTreeNode(p.Right[12]));
                         BinaryTreeNode n = new BinaryTreeNode("vista", b, c);
 
                         b = new BinaryTreeNode("at", a, n);
@@ -255,9 +256,9 @@ namespace CompiB
                 case 10:
                     {
 
-                        BinaryTreeNode a = new BinaryTreeNode(p.Right[2].Val);
-                        BinaryTreeNode b = new BinaryTreeNode("posT", new BinaryTreeNode(p.Right[4].Val), new BinaryTreeNode(p.Right[6].Val));
-                        BinaryTreeNode c = new BinaryTreeNode("tamT", new BinaryTreeNode(p.Right[8].Val), new BinaryTreeNode(p.Right[10].Val));
+                        BinaryTreeNode a = new BinaryTreeNode(p.Right[2]);
+                        BinaryTreeNode b = new BinaryTreeNode("posT", new BinaryTreeNode(p.Right[4]), new BinaryTreeNode(p.Right[6]));
+                        BinaryTreeNode c = new BinaryTreeNode("tamT", new BinaryTreeNode(p.Right[8]), new BinaryTreeNode(p.Right[10]));
                         BinaryTreeNode n = new BinaryTreeNode("vista", b, c);
 
                         nodesStack.Push(new BinaryTreeNode("CT", a, n));
@@ -267,8 +268,8 @@ namespace CompiB
                 // def-ctrl -> CreaLabel ( id , cadena , num , num ) ;
                 case 11:
                     {
-                        BinaryTreeNode a = new BinaryTreeNode("idL", new BinaryTreeNode(p.Right[2].Val), new BinaryTreeNode(p.Right[4].Val));
-                        BinaryTreeNode b = new BinaryTreeNode("posL", new BinaryTreeNode(p.Right[6].Val), new BinaryTreeNode(p.Right[8].Val));
+                        BinaryTreeNode a = new BinaryTreeNode("idL", new BinaryTreeNode(p.Right[2]), new BinaryTreeNode(p.Right[4]));
+                        BinaryTreeNode b = new BinaryTreeNode("posL", new BinaryTreeNode(p.Right[6]), new BinaryTreeNode(p.Right[8]));
 
                         nodesStack.Push(new BinaryTreeNode("CL", a, b));
                     }
@@ -320,7 +321,7 @@ namespace CompiB
                 case 29:
                     {
                         BinaryTreeNode b = nodesStack.Pop();
-                        BinaryTreeNode a = new BinaryTreeNode(p.Right[0].Val);
+                        BinaryTreeNode a = new BinaryTreeNode(p.Right[0]);
                         nodesStack.Push(new BinaryTreeNode(":=", a, b));
                     }
                     break;
@@ -329,7 +330,7 @@ namespace CompiB
                 case 30:
                     {
                         BinaryTreeNode b = nodesStack.Pop();
-                        BinaryTreeNode a = new BinaryTreeNode(p.Right[0].Val + "[" + auxArr.Pop().Content + "]");
+                        BinaryTreeNode a = new BinaryTreeNode(p.Right[0].Val + "[" + auxArr.Pop().Content + "]",b.Line);
                         nodesStack.Push(new BinaryTreeNode(":=", a, b));
                     }
                     break;
@@ -357,7 +358,7 @@ namespace CompiB
                 case 33:
                     {
                         BinaryTreeNode b = nodesStack.Pop();
-                        BinaryTreeNode a = new BinaryTreeNode(p.Right[2].Val);
+                        BinaryTreeNode a = new BinaryTreeNode(p.Right[2]);
 
                         nodesStack.Push(new BinaryTreeNode("switch", a, b));
                     }
@@ -377,7 +378,7 @@ namespace CompiB
                 case 36:
                     {
                         BinaryTreeNode b = nodesStack.Pop();
-                        BinaryTreeNode a = new BinaryTreeNode(p.Right[1].Val);
+                        BinaryTreeNode a = new BinaryTreeNode(p.Right[1]);
 
                         nodesStack.Push(new BinaryTreeNode("case", a, b));
                     }
@@ -387,9 +388,9 @@ namespace CompiB
                 case 37:
                     {
                         BinaryTreeNode c = nodesStack.Pop();
-                        BinaryTreeNode b = new BinaryTreeNode("incremento", new BinaryTreeNode(p.Right[6].Val), new BinaryTreeNode(p.Right[8].Val));
+                        BinaryTreeNode b = new BinaryTreeNode("incremento", new BinaryTreeNode(p.Right[6]), new BinaryTreeNode(p.Right[8]));
                         BinaryTreeNode n = new BinaryTreeNode(";", b, c);
-                        BinaryTreeNode a = new BinaryTreeNode(":=", new BinaryTreeNode(p.Right[2].Val), new BinaryTreeNode(p.Right[4].Val));
+                        BinaryTreeNode a = new BinaryTreeNode(":=", new BinaryTreeNode(p.Right[2]), new BinaryTreeNode(p.Right[4]));
 
                         nodesStack.Push(new BinaryTreeNode("for", a, n));
                     }
@@ -398,7 +399,7 @@ namespace CompiB
                 // sent-func -> MessageBox ( cadena )
                 case 38:
                     {
-                        BinaryTreeNode a = new BinaryTreeNode(p.Right[2].Val);
+                        BinaryTreeNode a = new BinaryTreeNode(p.Right[2]);
                         nodesStack.Push(new BinaryTreeNode("MS", a, null));
                     }
                     break;
@@ -421,12 +422,12 @@ namespace CompiB
                 
                 //indice -> num    
                 case 41:
-                    auxArr.Push(new BinaryTreeNode(p.Right[0].Val));
+                    auxArr.Push(new BinaryTreeNode(p.Right[0]));
                     break;
 
                 //indice->id
                 case 42:
-                    auxArr.Push(new BinaryTreeNode(p.Right[0].Val));
+                    auxArr.Push(new BinaryTreeNode(p.Right[0]));
                     break;
 
                 //identificadores -> identificadores , id
@@ -447,7 +448,7 @@ namespace CompiB
                         BinaryTreeNode b = nodesStack.Pop();
                         BinaryTreeNode a = nodesStack.Pop();
                         //nodesStack.Push(new BinaryTreeNode(operatorsStack.Pop(), a, b));
-                        nodesStack.Push(new BinaryTreeNode(p.Right[1].Val, a, b));
+                        nodesStack.Push(new BinaryTreeNode(p.Right[1], a, b));
                     }
                     break;
 
@@ -470,7 +471,7 @@ namespace CompiB
                         BinaryTreeNode b = nodesStack.Pop();
                         BinaryTreeNode a = nodesStack.Pop();
 
-                        nodesStack.Push(new BinaryTreeNode(p.Right[1].Val, a, b));
+                        nodesStack.Push(new BinaryTreeNode(p.Right[1], a, b));
                     }
                     break;
 
@@ -488,13 +489,13 @@ namespace CompiB
                 case 60:
                 case 61:
                     {
-                        nodesStack.Push(new BinaryTreeNode(p.Right[0].Val));
+                        nodesStack.Push(new BinaryTreeNode(p.Right[0]));
                     }
                     break;
                 //factor->id [ indice ]
                 case 62:
                     {
-                        nodesStack.Push(new BinaryTreeNode(p.Right[0].Val+"["+auxArr.Pop().Content+"]"));
+                        nodesStack.Push(new BinaryTreeNode(p.Right[0].Val+"["+auxArr.Peek().Content+"]", auxArr.Pop().Line));
                     }
                     break;
             }
