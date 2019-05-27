@@ -23,11 +23,28 @@ namespace CompiB
             ExeAllQuads(index); //solo por test 
         }
 
+        public void cleanInterpreter()
+        {
+            VentStack = new Stack<string>();
+            simbTable = new Dictionary<string, dynamic>();
+        }
+
+        public int interpreterStep(int index)
+        {
+            if (index <= quadsList.Count - 1)
+            {
+                index = ReadQuads(index);
+                if (index == -1)
+                    MessageBox.Show("Algo estuvo mal en la Ejecucion", "Atencion:");
+            }
+            else
+                index = 0;
+            return index;
+        }
+
         public void ExeAllQuads(int i)
         {
             // Usa ReadQuads dandole el indice inicial y recuperar el siguiente 
-            
-            
             while (i <= quadsList.Count - 1 && i != -1)
                 i = ReadQuads(i);
             if(i == -1)
@@ -349,7 +366,15 @@ namespace CompiB
                     VentForm VF = new VentForm();
                     VF.id = keyVar;
                     VF.text = OperatorA;
-                    simbTable.Add(keyVar, VF);
+                    try
+                    {
+                        simbTable.Add(keyVar, VF);
+                    }
+                    catch
+                    {
+
+                    }
+                    
 
                     //Se agrega al Stack
                     VentStack.Push(keyVar);

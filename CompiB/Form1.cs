@@ -22,6 +22,9 @@ namespace CompiB
         string sourceFilePath;
         Parser parser;
         List<Quad> currentQuads;
+        int iQuad = 0;
+        char banQuad = '0';
+        Interpreter interpreter;
 
         public Form1()
         {
@@ -310,7 +313,17 @@ namespace CompiB
 
         private void ejecutaB_Click(object sender, EventArgs e)
         {
-            Interpreter interpreter = new Interpreter(currentQuads);
+            interpreter = new Interpreter(currentQuads);
+        }
+
+        private void highLvlB_Click(object sender, EventArgs e)
+        {
+            if (banQuad == '0')
+            {
+                interpreter.cleanInterpreter();
+                banQuad = '1';
+            }
+            iQuad = interpreter.interpreterStep(iQuad);
         }
     }
 }
