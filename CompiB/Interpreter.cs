@@ -45,6 +45,21 @@ namespace CompiB
             quadsList.Add(new Quad("end", null, null, null, 9, 7));
         }
 
+        private void GenerateManualQuads2()
+        {
+            quadsList = new List<Quad>();
+            quadsList.Add(new Quad(":=", "2000", null, "numero", 0, 1));
+            quadsList.Add(new Quad(":=", "0", null, "dato", 1, 2));
+            quadsList.Add(new Quad(">", "numero", "1000", "t1", 2, 3));
+            quadsList.Add(new Quad("gotoF", "t1", "10", null, 3, 3));
+            quadsList.Add(new Quad("-", "numero", "1", "t2", 4, 4));
+            quadsList.Add(new Quad(":=", "t2", null, "numero", 5, 4));
+            quadsList.Add(new Quad("+", "dato", "1", "t3", 6, 5));
+            quadsList.Add(new Quad(":=", "t3", null, "dato", 7, 5));
+            quadsList.Add(new Quad("goto", "3", null, null, 8, 6));
+            quadsList.Add(new Quad("end", null, null, null, 9, 7));
+        }
+
         private int ReadQuads(int i)
         {
             string keyVar;
@@ -322,6 +337,8 @@ namespace CompiB
                     simbTable[keyVar].tamY = OperatorB;
 
                     //!!!!!!!!!!!!!!!!!!!brincar el indice a su respectivo endB
+                    break;
+                case "txtB":
                     break;
                 case "idL": //inicializa un Label
                     keyVar = quadsList[i].Result.ToString();
