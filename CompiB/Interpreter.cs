@@ -97,12 +97,13 @@ namespace CompiB
             bool b;
             if (simbTable.Keys.Contains(resultVar))
             {
-                if(simbTable[keyVar] is LblForm || simbTable[keyVar] is TextBox)
+                if(simbTable[keyVar] is LblForm || simbTable[keyVar] is TxtBoxForm)
                 {
                     //Acceder al form en ejecucion
                     Form currentForm = simbTable[simbTable[keyVar].idOwnerForm].form;
                     Control[] c = currentForm.Controls.Find(simbTable[keyVar].id, true);
-                    c.First().Text = simbTable[resultVar];
+                    dynamic op = ExtractOperand(resultVar);
+                    c.First().Text = op.ToString();
                 }
                 else
                 {
@@ -248,8 +249,10 @@ namespace CompiB
                     keyVar = quadsList[i].Result.ToString();
                     OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
                     OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
-
-                    if (OperatorA is int && OperatorB is int)
+                    
+                    if ((OperatorA is int && (OperatorB is int || OperatorB is float))
+                        || (OperatorB is int && (OperatorA is int || OperatorA is float)) 
+                        || (OperatorA is float && OperatorB is float))
                     {
                         //resultado de int + int
                         resOp = OperatorA + OperatorB;
@@ -316,7 +319,7 @@ namespace CompiB
                     nextIndex = i;
                     nextIndex++;
                     break;
-                case "^":
+                case "**":
                     keyVar = quadsList[i].Result.ToString();
                     OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
                     OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
@@ -326,6 +329,7 @@ namespace CompiB
                         resOp2 = Math.Pow(OperatorA, OperatorB);
                     else
                         resOp2 = Math.Sqrt(OperatorA);
+                    resOp = (int)resOp2;
                     if (simbTable.Keys.Contains(keyVar))
                         simbTable[keyVar] = resOp;
                     else
