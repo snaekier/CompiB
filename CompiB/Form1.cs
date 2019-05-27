@@ -280,10 +280,10 @@ namespace CompiB
         private void muestraQuads()
         {
             DataTable tabla = new DataTable();
-            tabla.Columns.Add("Operador"); tabla.Columns.Add("Operando 1"); tabla.Columns.Add("Operando 2"); tabla.Columns.Add("Resultado"); tabla.Columns.Add("Linea");
+            tabla.Columns.Add("Num"); tabla.Columns.Add("Operador"); tabla.Columns.Add("Operando 1"); tabla.Columns.Add("Operando 2"); tabla.Columns.Add("Resultado"); tabla.Columns.Add("Linea");
             foreach (Quad q in currentQuads)
             {
-                tabla.Rows.Add(q.Operator,q.OperandA,q.OperandB,q.Result, q.NumL);
+                tabla.Rows.Add(q.Num, q.Operator,q.OperandA,q.OperandB,q.Result, q.NumL);
             }
             cuadruplosGrid.DataSource = tabla;
         }

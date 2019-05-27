@@ -81,9 +81,9 @@ namespace CompiB
                     break;
 
                 case "CT":
-                    Quads.Add(new Quad("txtB", "null", "null", node.Left.Content, 0, node.Left.Line));
-                    Quads.Add(new Quad("posT", node.Right.Left.Left.Content, node.Right.Left.Right.Content, node.Left.Content,0,node.Right.Left.Left.Line));
-                    Quads.Add(new Quad("tamT", node.Right.Right.Left.Content, node.Right.Right.Right.Content, node.Left.Content, 0, node.Right.Right.Left.Line));
+                    Quads.Add(new Quad("txtB", "null", "null", node.Left.Content, Quads.Count, node.Left.Line));
+                    Quads.Add(new Quad("posT", node.Right.Left.Left.Content, node.Right.Left.Right.Content, node.Left.Content,Quads.Count,node.Right.Left.Left.Line));
+                    Quads.Add(new Quad("tamT", node.Right.Right.Left.Content, node.Right.Right.Right.Content, node.Left.Content, Quads.Count, node.Right.Right.Left.Line));
                     break;
 
 
@@ -230,7 +230,12 @@ namespace CompiB
                     //}
                     GenericNode(node);
                     break;
-
+                case "<=":
+                    GenericNode(node);
+                    break;
+                case ">=":
+                    GenericNode(node);
+                    break; 
                 case "%":
                     GenericNode(node);
                     break;
