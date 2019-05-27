@@ -151,7 +151,7 @@ namespace CompiB
                     Quad condition = new Quad("GOTOFALSE", TempValuesStack.Pop(), null, null, Quads.Count,node.Left.Line);
                     Quads.Add(condition);
                     SwitchNodes(node.Right);
-                    condition.OperandB = Quads.Count - 1;
+                    condition.OperandB = Quads.Count + 1;
                     Quads.Add(new Quad("GOTO", whileReturn.ToString(), "null", "null", Quads.Count, Quads.Last().NumL+1));
                     break;
 
