@@ -333,7 +333,7 @@ namespace CompiB
                     if (simbTable.Keys.Contains(keyVar))
                         simbTable[keyVar] = resOp;
                     else
-                        simbTable.Add(keyVar, resOp2);
+                        simbTable.Add(keyVar, resOp);
 
                     nextIndex = i;
                     nextIndex++;
@@ -517,6 +517,7 @@ namespace CompiB
         {
             int n;
             bool b;
+            float f;
 
             if (simbTable.Keys.Contains(Op))
             {
@@ -530,8 +531,10 @@ namespace CompiB
                         return n;
                     else if (bool.TryParse(res, out b))
                         return b;
+                    else if (float.TryParse(res, out f))
+                        return f;
                     else
-                        return Op;
+                        return res;
                 }
                else
                 return simbTable[Op];
@@ -544,6 +547,8 @@ namespace CompiB
                     return n;
                 else if (isBoolean)
                     return b;
+                else if (float.TryParse(Op, out f))
+                    return f;
                 else
                     return Op;
             }
