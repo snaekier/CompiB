@@ -79,6 +79,7 @@ namespace CompiB
             bool isNumericOpB;
             string resCadena = "";
             double resOp2 = -1;
+            VentForm formAux;
             switch (quadsList[i].Operator)
             {
                 case ":=":
@@ -281,7 +282,7 @@ namespace CompiB
                     simbTable[keyVar].tamX = OperatorA;
                     simbTable[keyVar].tamY = OperatorB;
 
-                    simbTable[keyVar].Create();
+                    simbTable[keyVar].Create(); //ventana actual
                     nextIndex = i;
                     nextIndex++;
                     break;
@@ -294,7 +295,7 @@ namespace CompiB
                     nextIndex = i;
                     nextIndex++;
                     break;
-                case "posT":
+                case "posT": //posicion txtBox
                     keyVar = quadsList[i].Result.ToString();
                     OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
                     OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
@@ -311,6 +312,8 @@ namespace CompiB
                     simbTable[keyVar].tamY = OperatorB;
 
                     simbTable[keyVar].Create();
+                    formAux = simbTable["ventana"];
+                    simbTable[keyVar].agregaTextBox(formAux.form); //se agrega el control a la forma
                     nextIndex = i;
                     nextIndex++;
                     break;
@@ -370,6 +373,8 @@ namespace CompiB
                     break;
                 case "endV":
                     //tambien aqui
+                    formAux = simbTable["ventana"];
+                    formAux.Show();
                     nextIndex = i;
                     nextIndex++;
                     break;

@@ -12,7 +12,7 @@ namespace CompiB
     {
         public string id, text;
         public int posX, posY, tamX, tamY;
-        Form form = new Form();
+        public Form form = new Form();
 
         public void Create()
         {
