@@ -84,7 +84,7 @@ namespace CompiB
 
     public class LblForm
     {
-        public string id, text;
+        public string id, text, idOwnerForm;
         public int posX, posY;
         Label label = new Label();
 
@@ -93,6 +93,7 @@ namespace CompiB
             label.Location = new Point(posX, posY);
             label.Text = text;
             label.Name = id;
+            label.AutoSize = true;
         }
 
         public void AddLabel(Form forma)

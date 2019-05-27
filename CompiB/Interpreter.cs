@@ -73,6 +73,38 @@ namespace CompiB
             quadsList.Add(new Quad("end", null, null, null, 9, 7));
         }
 
+
+        private void AddData(string keyVar, string resultVar)
+        {
+            int n;
+            bool b;
+            if (simbTable.Keys.Contains(resultVar))
+            {
+                if(simbTable[keyVar] is LblForm || simbTable[keyVar] is TextBox)
+                {
+                    //Acceder al form en ejecucion
+                    Form currentForm = simbTable[simbTable[keyVar].idOwnerForm].form;
+                    Control[] c = currentForm.Controls.Find(simbTable[keyVar].id, true);
+                    c.First().Text = simbTable[resultVar];
+                }
+                else
+                {
+                    simbTable[keyVar] = simbTable[resultVar];
+                }              
+            }   
+            else
+            {
+                bool isNumeric = int.TryParse(resultVar, out n);
+                bool isBoolean = bool.TryParse(resultVar, out b);
+                if (isNumeric)
+                    simbTable[keyVar] = n;
+                else if (isBoolean)
+                    simbTable[keyVar] = b;
+                else
+                    simbTable[keyVar] = resultVar;
+            }
+        }
+
         private int ReadQuads(int i)
         {
             string keyVar;
@@ -88,18 +120,17 @@ namespace CompiB
             string resCadena = "";
             double resOp2 = -1;
             
-            //VentForm formAux;
             switch (quadsList[i].Operator)
             {
-                case ":=":
+                case ":=":  //keyVar := opA
                     keyVar = quadsList[i].Result.ToString();
                     OpA = quadsList[i].OperandA.ToString();
                     if (simbTable.Keys.Contains(keyVar))
-                        AddData(OpA, keyVar);
+                        AddData(keyVar, OpA);
                     else
                     {
                         simbTable.Add(keyVar, null);
-                        AddData(OpA, keyVar);
+                        AddData(keyVar, OpA);
                     }
                     nextIndex = i;
                     nextIndex++;
@@ -213,7 +244,7 @@ namespace CompiB
                     else
                     {
                         //resultado de string + string
-                        resCadena = OperatorA.ToString() + OperatorB.ToString();
+                        resCadena = OperatorA + OperatorB;
                         if (simbTable.Keys.Contains(keyVar))
                             simbTable[keyVar] = resCadena;
                         else
@@ -431,6 +462,7 @@ namespace CompiB
                     OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
                     simbTable[keyVar].posX = OperatorA;
                     simbTable[keyVar].posY = OperatorB;
+                    simbTable[keyVar].idOwnerForm = VentStack.Peek();
 
                     simbTable[keyVar].Create();
                     simbTable[keyVar].AddLabel(simbTable[VentStack.Peek()].form);
@@ -450,25 +482,6 @@ namespace CompiB
                     break;
             }
             return nextIndex;
-        }
-
-        private void AddData(string resultVar, string keyVar)
-        {
-            int n;
-            bool b;
-            if (simbTable.Keys.Contains(resultVar))
-                simbTable[keyVar] = simbTable[resultVar];
-            else
-            {
-                bool isNumeric = int.TryParse(resultVar, out n);
-                bool isBoolean = bool.TryParse(resultVar, out b);
-                if (isNumeric)
-                    simbTable[keyVar] = n;
-                else if (isBoolean)
-                    simbTable[keyVar] = b;
-                else
-                    simbTable[keyVar] = resultVar;
-            }
         }
 
         private dynamic ExtractOperand(string Op)
