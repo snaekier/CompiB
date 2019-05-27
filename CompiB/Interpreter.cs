@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CompiB
 {
@@ -27,6 +28,10 @@ namespace CompiB
             while (i <= quadsList.Count - 1 && i != -1)
             {
                 i = ReadQuads(i);
+            }
+            if(i == -1)
+            {
+                MessageBox.Show("Algo estuvo mal en la Ejecucion", "Atencion:");
             }
         }
 
@@ -280,12 +285,11 @@ namespace CompiB
                     nextIndex = i;
                     nextIndex++;
                     break;
-                case "idT": //inicializa txtBox
+                case "txtB": //inicializa txtBox
                     keyVar = quadsList[i].Result.ToString();
-                    OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
                     TxtBoxForm TF = new TxtBoxForm();
                     TF.id = keyVar;
-                    TF.text = OperatorA;                    //<- TODO checar eso
+                    TF.text = "";
                     simbTable.Add(keyVar, TF);
                     nextIndex = i;
                     nextIndex++;
@@ -329,16 +333,14 @@ namespace CompiB
                     nextIndex = i;
                     nextIndex++;
                     break;
-                case "tamB": //crea un Boton y 
+                case "tamB": //crea un Boton
                     keyVar = quadsList[i].Result.ToString();
                     OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
                     OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
                     simbTable[keyVar].tamX = OperatorA;
                     simbTable[keyVar].tamY = OperatorB;
 
-                    //!!!!!!!!!!!!!!!!!!!brincar el indice a su respectivo endB
-                    break;
-                case "txtB":
+                    nextIndex = FindNextEndButton(i+1);
                     break;
                 case "idL": //inicializa un Label
                     keyVar = quadsList[i].Result.ToString();
@@ -411,6 +413,22 @@ namespace CompiB
                 else
                     return Op;
             }
+        }
+
+        private int FindNextEndButton(int btnStartIndex)
+        {
+            int counterOtherButtons = 0;
+            for (int i = btnStartIndex; i < quadsList.Count; i++)
+            {
+                if (quadsList[i].Operator == "idB")
+                    counterOtherButtons++;
+                if (quadsList[i].Operator == "endB")
+                    if (counterOtherButtons == 0)
+                        return i;
+                    else
+                        counterOtherButtons--;
+            }
+            return -1;
         }
     }
 }
