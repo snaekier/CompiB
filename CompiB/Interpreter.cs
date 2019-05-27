@@ -336,13 +336,13 @@ namespace CompiB
                     break;
                 case "GOTO":
                     OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
-                    nextIndex = OperatorA - 1;
+                    nextIndex = OperatorA;
                     break;
                 case "GOTOTRUE":
                     OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
                     OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
                     if (OperatorA)
-                        nextIndex = OperatorB - 1;
+                        nextIndex = OperatorB; //<- checar TODO
                     else
                     {
                         nextIndex = i;
@@ -353,7 +353,7 @@ namespace CompiB
                     OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
                     OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
                     if (!OperatorA)
-                        nextIndex = OperatorB - 1;
+                        nextIndex = OperatorB; //<- checar TODO
                     else
                     {
                         nextIndex = i;
