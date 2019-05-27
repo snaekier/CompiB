@@ -1,7 +1,7 @@
 defmain
 {
 	int a , b , c , x1 , x2 , t1 , t2 , t3
-	CreaVentana ( vent1 , "factorial", 250 , 250 , 500 , 300 ) 
+	CreaVentana ( vent1 , "EcuacionGCuadratica", 250 , 250 , 500 , 300 ) 
 	{
 
 		CreaLabel ( la , "a:" , 30 , 20 ) ; 
