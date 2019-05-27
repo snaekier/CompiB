@@ -31,7 +31,7 @@ namespace CompiB
 
     public class ButtonForm
     {
-        public string id, text ;
+        public string id, text, idOwnerForm;
         public int posX, posY, tamX, tamY, startQuad, endQuad;
         Button button = new Button();
         public Interpreter myInter;
@@ -63,7 +63,7 @@ namespace CompiB
 
     public class TxtBoxForm
     {
-        public string id, text;
+        public string id, text, idOwnerForm;
         public int posX, posY, tamX, tamY;
         TextBox textBox = new TextBox();
 

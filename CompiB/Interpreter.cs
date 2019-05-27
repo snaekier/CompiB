@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -106,142 +107,190 @@ namespace CompiB
                 case "<":
                     keyVar = quadsList[i].Result.ToString();
                     // ## extraer Operando A y B
-                    OpA = quadsList[i].OperandA.ToString();
-                    OperatorA = ExtractOperand(OpA);
-                    OpB = quadsList[i].OperandB.ToString();
-                    OperatorB = ExtractOperand(OpB);
+                    OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
+                    OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
 
                     //resultado de <
                     res = OperatorA < OperatorB;
-                    simbTable.Add(keyVar, res);
+                    if(simbTable.Keys.Contains(keyVar))
+                        simbTable[keyVar] = res;
+                    else
+                        simbTable.Add(keyVar, res);
+
                     nextIndex = i;
                     nextIndex++;
                     break;
                 case "<=":
                     keyVar = quadsList[i].Result.ToString();
-                    OpA = quadsList[i].OperandA.ToString();
-                    OperatorA = ExtractOperand(OpA);
-                    OpB = quadsList[i].OperandB.ToString();
-                    OperatorB = ExtractOperand(OpB);
+                    OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
+                    OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
 
                     //resultado de <=
                     res = OperatorA <= OperatorB;
-                    simbTable.Add(keyVar, res);
+                    if (simbTable.Keys.Contains(keyVar))
+                        simbTable[keyVar] = res;
+                    else
+                        simbTable.Add(keyVar, res);
+
                     nextIndex = i;
                     nextIndex++;
                     break;
                 case ">":
                     keyVar = quadsList[i].Result.ToString();
-                    OpA = quadsList[i].OperandA.ToString();
-                    OperatorA = ExtractOperand(OpA);
-                    OpB = quadsList[i].OperandB.ToString();
-                    OperatorB = ExtractOperand(OpB);
+                    OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
+                    OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
 
                     //resultado de >
                     res = OperatorA > OperatorB;
-                    simbTable.Add(keyVar, res);
+                    if (simbTable.Keys.Contains(keyVar))
+                        simbTable[keyVar] = res;
+                    else
+                        simbTable.Add(keyVar, res);
+
                     nextIndex = i;
                     nextIndex++;
                     break;
                 case ">=":
                     keyVar = quadsList[i].Result.ToString();
-                    OpA = quadsList[i].OperandA.ToString();
-                    OperatorA = ExtractOperand(OpA);
-                    OpB = quadsList[i].OperandB.ToString();
-                    OperatorB = ExtractOperand(OpB);
+                    OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
+                    OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
 
                     //resultado de >=
                     res = OperatorA >= OperatorB;
-                    simbTable.Add(keyVar, res);
+                    if (simbTable.Keys.Contains(keyVar))
+                        simbTable[keyVar] = res;
+                    else
+                        simbTable.Add(keyVar, res);
+
+                    nextIndex = i;
+                    nextIndex++;
+                    break;
+                case "==":
+                    keyVar = quadsList[i].Result.ToString();
+                    OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
+                    OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
+
+                    //resultado de ==
+                    res = OperatorA == OperatorB;
+                    if (simbTable.Keys.Contains(keyVar))
+                        simbTable[keyVar] = res;
+                    else
+                        simbTable.Add(keyVar, res);
+
+                    nextIndex = i;
+                    nextIndex++;
+                    break;
+                case "!=":
+                    keyVar = quadsList[i].Result.ToString();
+                    OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
+                    OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
+
+                    //resultado de !=
+                    res = OperatorA != OperatorB;
+                    if (simbTable.Keys.Contains(keyVar))
+                        simbTable[keyVar] = res;
+                    else
+                        simbTable.Add(keyVar, res);
+
                     nextIndex = i;
                     nextIndex++;
                     break;
                 case "+":
                     //TODO concatenar aun no esta 
                     keyVar = quadsList[i].Result.ToString();
-                    OpA = quadsList[i].OperandA.ToString();
-                    OperatorA = ExtractOperand(OpA);
-                    OpB = quadsList[i].OperandB.ToString();
-                    OperatorB = ExtractOperand(OpB);
+                    OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
+                    OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
 
-                    isNumericOpA = int.TryParse(OpA, out n);
-                    isNumericOpB = int.TryParse(OpB, out n);
-
-                    if (isNumericOpA && isNumericOpB)
+                    if (OperatorA is int && OperatorB is int)
                     {
                         //resultado de int + int
                         resOp = OperatorA + OperatorB;
-                        simbTable.Add(keyVar, resOp);
+                        if (simbTable.Keys.Contains(keyVar))
+                            simbTable[keyVar] = resOp;
+                        else
+                            simbTable.Add(keyVar, resOp);
                     }
                     else
                     {
                         //resultado de string + string
-                        resCadena = OperatorA + OperatorB;
-                        simbTable.Add(keyVar, resCadena);
+                        resCadena = OperatorA.ToString() + OperatorB.ToString();
+                        if (simbTable.Keys.Contains(keyVar))
+                            simbTable[keyVar] = resCadena;
+                        else
+                            simbTable.Add(keyVar, resCadena);
+
                     }                    
                     nextIndex = i;
                     nextIndex++;
                     break;
                 case "-":
                     keyVar = quadsList[i].Result.ToString();
-                    OpA = quadsList[i].OperandA.ToString();
-                    OperatorA = ExtractOperand(OpA);
-                    OpB = quadsList[i].OperandB.ToString();
-                    OperatorB = ExtractOperand(OpB);
+                    OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
+                    OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
 
                     //resultado de -
                     resOp = OperatorA - OperatorB;
-                    simbTable.Add(keyVar, resOp);
+                    if (simbTable.Keys.Contains(keyVar))
+                        simbTable[keyVar] = resOp;
+                    else
+                        simbTable.Add(keyVar, resOp);
+
                     nextIndex = i;
                     nextIndex++;
                     break;
                 case "*":
                     keyVar = quadsList[i].Result.ToString();
-                    OpA = quadsList[i].OperandA.ToString();
-                    OperatorA = ExtractOperand(OpA);
-                    OpB = quadsList[i].OperandB.ToString();
-                    OperatorB = ExtractOperand(OpB);
+                    OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
+                    OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
 
                     //resultado de *
                     resOp = OperatorA * OperatorB;
-                    simbTable.Add(keyVar, resOp);
+                    if (simbTable.Keys.Contains(keyVar))
+                        simbTable[keyVar] = resOp;
+                    else
+                        simbTable.Add(keyVar, resOp);
+
                     nextIndex = i;
                     nextIndex++;
                     break;
                 case "/":
                     keyVar = quadsList[i].Result.ToString();
-                    OpA = quadsList[i].OperandA.ToString();
-                    OperatorA = ExtractOperand(OpA);
-                    OpB = quadsList[i].OperandB.ToString();
-                    OperatorB = ExtractOperand(OpB);
+                    OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
+                    OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
 
                     //resultado de /
                     resOp = OperatorA / OperatorB;
-                    simbTable.Add(keyVar, resOp);
+                    if (simbTable.Keys.Contains(keyVar))
+                        simbTable[keyVar] = resOp;
+                    else
+                        simbTable.Add(keyVar, resOp);
+
                     nextIndex = i;
                     nextIndex++;
                     break;
                 case "^":
                     keyVar = quadsList[i].Result.ToString();
-                    OpA = quadsList[i].OperandA.ToString();
-                    OperatorA = ExtractOperand(OpA);
-                    OpB = quadsList[i].OperandB.ToString();
-                    OperatorB = ExtractOperand(OpB);
+                    OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
+                    OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
 
                     //resultado de ^ checar si es menor de 0 la potencia, es una raiz cuadrada
                     if (OperatorB >= 1)
                         resOp2 = Math.Pow(OperatorA, OperatorB);
                     else
                         resOp2 = Math.Sqrt(OperatorA);
-                    simbTable.Add(keyVar, resOp2);
+                    if (simbTable.Keys.Contains(keyVar))
+                        simbTable[keyVar] = resOp;
+                    else
+                        simbTable.Add(keyVar, resOp2);
+
                     nextIndex = i;
                     nextIndex++;
                     break;
-                case "goto":
+                case "GOTO":
                     OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
                     nextIndex = OperatorA - 1;
                     break;
-                case "gotoT":
+                case "GOTOTRUE":
                     OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
                     OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
                     if (OperatorA)
@@ -252,7 +301,7 @@ namespace CompiB
                         nextIndex++;
                     }
                     break;
-                case "gotoF":
+                case "GOTOFALSE":
                     OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
                     OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
                     if (!OperatorA)
@@ -322,6 +371,7 @@ namespace CompiB
                     OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
                     simbTable[keyVar].tamX = OperatorA;
                     simbTable[keyVar].tamY = OperatorB;
+                    simbTable[keyVar].idOwnerForm = VentStack.Peek();
 
                     simbTable[keyVar].Create(); 
                     simbTable[keyVar].AddTextBox(simbTable[VentStack.Peek()].form);
@@ -359,9 +409,11 @@ namespace CompiB
                     nextIndex = FindNextEndButton(i + 1);
                     simbTable[keyVar].startQuad = i + 1;
                     simbTable[keyVar].endQuad = nextIndex - 1;
+                    simbTable[keyVar].idOwnerForm = VentStack.Peek();
 
                     simbTable[keyVar].Create();
                     simbTable[keyVar].AddButton(simbTable[VentStack.Peek()].form);
+                    simbTable[keyVar].eventoBoton();
                     break;
                 case "idL": //inicializa un Label
                     keyVar = quadsList[i].Result.ToString();
@@ -392,7 +444,7 @@ namespace CompiB
                     nextIndex++;
                     break;
                 case "endV":
-                    //VentStack.Pop(); //se libera una ventana, talvez eliminarla (? TODO
+                    VentStack.Pop(); //se libera una ventana, talvez eliminarla (? TODO
                     nextIndex = i;
                     nextIndex++;
                     break;
@@ -423,8 +475,25 @@ namespace CompiB
         {
             int n;
             bool b;
+
             if (simbTable.Keys.Contains(Op))
+            {
+               if(simbTable[Op] is TxtBoxForm)
+               {
+                    //Acceder al form en ejecucion
+                    Form currentForm = simbTable[simbTable[Op].idOwnerForm].form;
+                    Control[] c = currentForm.Controls.Find(simbTable[Op].id, true);
+                    string res = c.First().Text.Trim();
+                    if (int.TryParse(res, out n))
+                        return n;
+                    else if (bool.TryParse(res, out b))
+                        return b;
+                    else
+                        return Op;
+                }
+               else
                 return simbTable[Op];
+            }
             else
             {
                 bool isNumeric = int.TryParse(Op, out n);
