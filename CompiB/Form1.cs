@@ -60,7 +60,7 @@ namespace CompiB
         private void programaText_TextChanged(object sender, EventArgs e)
         {
             posicion = programaText.SelectionStart;
-           // ejecucion();
+            ejecucion();
         }
 
         /// <summary>
