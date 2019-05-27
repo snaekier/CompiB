@@ -10,7 +10,7 @@ defmain
                 y := 1;
                 a := ba;
                 cont := 0;
-				while ( cont <= a ) {
+				while ( cont <= a - 2) {
                     z := x + y ;
                     x := y;
                     y := z;
