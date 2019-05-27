@@ -7,15 +7,17 @@ using System.Windows.Forms;
 
 namespace CompiB
 {
-    class Interpreter
+    public class Interpreter
     {
         Dictionary<string, dynamic> simbTable = new Dictionary<string, dynamic>();
         List<Quad> quadsList;
+        Stack<string> VentStack;
 
         public Interpreter(List<Quad> quads)
         {
             int index = 0;
             quadsList = quads;
+            VentStack = new Stack<string>();
             //GenerateManualQuads();
             ExeAllQuads(index); //solo por test 
         }
@@ -26,13 +28,18 @@ namespace CompiB
             
             
             while (i <= quadsList.Count - 1 && i != -1)
-            {
                 i = ReadQuads(i);
-            }
             if(i == -1)
-            {
                 MessageBox.Show("Algo estuvo mal en la Ejecucion", "Atencion:");
-            }
+        }
+
+        public void ExeFragmentQuads(int ini, int end)
+        {
+            int i = ini;
+            while (i <= end && i != -1)
+                i = ReadQuads(i);
+            if (i == -1)
+                MessageBox.Show("Algo estuvo mal en la Ejecucion de fragmento", "Atencion:");
         }
 
         private void GenerateManualQuads()
@@ -79,7 +86,8 @@ namespace CompiB
             bool isNumericOpB;
             string resCadena = "";
             double resOp2 = -1;
-            VentForm formAux;
+            
+            //VentForm formAux;
             switch (quadsList[i].Operator)
             {
                 case ":=":
@@ -220,8 +228,7 @@ namespace CompiB
                     OpB = quadsList[i].OperandB.ToString();
                     OperatorB = ExtractOperand(OpB);
 
-                    //resultado de ^
-                    //checar si es menor de 0 la potencia, es una raiz cuadrada
+                    //resultado de ^ checar si es menor de 0 la potencia, es una raiz cuadrada
                     if (OperatorB >= 1)
                         resOp2 = Math.Pow(OperatorA, OperatorB);
                     else
@@ -263,6 +270,9 @@ namespace CompiB
                     VF.id = keyVar;
                     VF.text = OperatorA;
                     simbTable.Add(keyVar, VF);
+
+                    //Se agrega al Stack
+                    VentStack.Push(keyVar);
                     nextIndex = i;
                     nextIndex++;
                     break;
@@ -283,6 +293,8 @@ namespace CompiB
                     simbTable[keyVar].tamY = OperatorB;
 
                     simbTable[keyVar].Create(); //ventana actual
+                    simbTable[keyVar].Show();
+
                     nextIndex = i;
                     nextIndex++;
                     break;
@@ -311,9 +323,9 @@ namespace CompiB
                     simbTable[keyVar].tamX = OperatorA;
                     simbTable[keyVar].tamY = OperatorB;
 
-                    simbTable[keyVar].Create();
-                    formAux = simbTable["ventana"];
-                    simbTable[keyVar].agregaTextBox(formAux.form); //se agrega el control a la forma
+                    simbTable[keyVar].Create(); 
+                    simbTable[keyVar].AddTextBox(simbTable[VentStack.Peek()].form);
+
                     nextIndex = i;
                     nextIndex++;
                     break;
@@ -323,6 +335,7 @@ namespace CompiB
                     ButtonForm BF = new ButtonForm();
                     BF.id = keyVar;
                     BF.text = OperatorA;
+                    BF.myInter = this;
                     simbTable.Add(keyVar, BF);
                     nextIndex = i;
                     nextIndex++;
@@ -343,7 +356,12 @@ namespace CompiB
                     simbTable[keyVar].tamX = OperatorA;
                     simbTable[keyVar].tamY = OperatorB;
 
-                    nextIndex = FindNextEndButton(i+1);
+                    nextIndex = FindNextEndButton(i + 1);
+                    simbTable[keyVar].startQuad = i + 1;
+                    simbTable[keyVar].endQuad = nextIndex - 1;
+
+                    simbTable[keyVar].Create();
+                    simbTable[keyVar].AddButton(simbTable[VentStack.Peek()].form);
                     break;
                 case "idL": //inicializa un Label
                     keyVar = quadsList[i].Result.ToString();
@@ -363,6 +381,8 @@ namespace CompiB
                     simbTable[keyVar].posY = OperatorB;
 
                     simbTable[keyVar].Create();
+                    simbTable[keyVar].AddLabel(simbTable[VentStack.Peek()].form);
+
                     nextIndex = i;
                     nextIndex++;
                     break;
@@ -372,9 +392,7 @@ namespace CompiB
                     nextIndex++;
                     break;
                 case "endV":
-                    //tambien aqui
-                    formAux = simbTable["ventana"];
-                    formAux.Show();
+                    //VentStack.Pop(); //se libera una ventana, talvez eliminarla (? TODO
                     nextIndex = i;
                     nextIndex++;
                     break;

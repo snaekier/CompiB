@@ -12,7 +12,7 @@ namespace CompiB
     {
         public string id, text;
         public int posX, posY, tamX, tamY;
-        public Form form = new Form();
+        public Form form = new Form(); 
 
         public void Create()
         {
@@ -20,6 +20,7 @@ namespace CompiB
             form.Width = tamX;
             form.Height = tamY;
             form.Text = text;
+            form.Name = id;
         }
 
         public void Show()
@@ -30,9 +31,10 @@ namespace CompiB
 
     public class ButtonForm
     {
-        public string id, text, startQuad, endQuad;
-        public int posX, posY, tamX, tamY;
+        public string id, text ;
+        public int posX, posY, tamX, tamY, startQuad, endQuad;
         Button button = new Button();
+        public Interpreter myInter;
 
         public void Create()
         {
@@ -40,6 +42,7 @@ namespace CompiB
             button.Width = tamX;
             button.Height = tamY;
             button.Text = text;
+            button.Name = id;
         }
 
         public void eventoBoton()
@@ -49,10 +52,10 @@ namespace CompiB
 
         public void button_Click(object sender, EventArgs e)
         {
-
+            myInter.ExeFragmentQuads(startQuad, endQuad);
         }
 
-        public void agregaBoton(Form forma)
+        public void AddButton(Form forma)
         {
             forma.Controls.Add(button);
         }
@@ -70,9 +73,10 @@ namespace CompiB
             textBox.Width = tamX;
             textBox.Height = tamY;
             textBox.Text = text;
+            textBox.Name = id;
         }
 
-        public void agregaTextBox(Form forma)
+        public void AddTextBox(Form forma)
         {
             forma.Controls.Add(textBox);
         }
@@ -88,9 +92,10 @@ namespace CompiB
         {
             label.Location = new Point(posX, posY);
             label.Text = text;
+            label.Name = id;
         }
 
-        public void agregaLabel(Form forma)
+        public void AddLabel(Form forma)
         {
             forma.Controls.Add(label);
         }
