@@ -1,0 +1,33 @@
+/* Este programa valida si un numero es primo o no */
+/* 0:=true 1:=false */
+
+defmain {
+	int numero, cont, mod, r
+	textBox entrada, salida
+	boton b1
+	vent v1
+	CreaVentana(v1,"Numero Primo",100,100,550,300) 
+	{
+		CreaLabel(label1, "Numero",50,30);
+		CreaTextbox(entrada,50,50,95,20);
+		CreaLabel(label2, "Resultado",50,80);
+		CreaTextbox(salida,50,100,95,20); 
+		CreaBoton(b1,"Validar",50,170,90,30) 
+		{
+			Click
+			{
+				numero := entrada;
+				r := 0;
+				cont := 2;
+				while(cont <= numero)
+				{
+					if ((numero % cont) != 0){
+						r := 1;
+					}
+					cont := cont + 1;
+				}
+				salida := r;
+			}
+		}
+	}
+}
