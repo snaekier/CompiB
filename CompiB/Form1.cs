@@ -257,7 +257,10 @@ namespace CompiB
                 ejecutaB.Enabled = true;
                 lowLvlB.Enabled = true;
                 highLvlB.Enabled = true;
-            }else
+
+                interpreter = new Interpreter(currentQuads, parser.TabSim);
+            }
+            else
             {
                 MessageBox.Show("Error en la línea: "+parser.Lines, "Algo salio mal");
                 ejecutaB.Enabled = false;
@@ -313,7 +316,8 @@ namespace CompiB
 
         private void ejecutaB_Click(object sender, EventArgs e)
         {
-            interpreter = new Interpreter(currentQuads);
+            interpreter.cleanInterpreter();
+            interpreter.ExeAllQuads(0);
         }
 
         private void highLvlB_Click(object sender, EventArgs e)

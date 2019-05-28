@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CompiB
 {
-    class Simbolo
+    public class Simbolo
     {
         string tipo;
         object valor;

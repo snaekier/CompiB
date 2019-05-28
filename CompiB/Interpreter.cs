@@ -14,19 +14,82 @@ namespace CompiB
         List<Quad> quadsList;
         Stack<string> VentStack;
 
-        public Interpreter(List<Quad> quads)
+        public Interpreter(List<Quad> quads, List<Simbolo> tambSimb)
         {
-            int index = 0;
             quadsList = quads;
             VentStack = new Stack<string>();
-            //GenerateManualQuads();
-            ExeAllQuads(index); //solo por test 
+            simbTable = new Dictionary<string, dynamic>();
+            UpdateSimbTable(tambSimb);
         }
 
         public void cleanInterpreter()
         {
             VentStack = new Stack<string>();
             simbTable = new Dictionary<string, dynamic>();
+        }
+
+        /// <summary>
+        /// Actualiza la tabla interna de simbolos con la que se genera en la compilación.
+        /// </summary>
+        /// <param name="tambSimb"></param>
+        private void UpdateSimbTable(List<Simbolo> tambSimb)
+        {
+            for (int i = 0; i < tambSimb.Count; i++)
+            {
+                string Type = "";
+                int numArr = -1;
+                int isArrIdx = tambSimb[i].Tipo.IndexOf("[");
+                if (isArrIdx >= 0)
+                {   //es un arreglo
+                    Type = tambSimb[i].Tipo;
+                    Type = Type.Substring(0, isArrIdx);
+
+                    string strNum = tambSimb[i].Tipo.Substring(isArrIdx + 1);
+                    numArr = int.Parse(strNum.Remove(strNum.Count() - 1));
+
+                }
+                else
+                    Type = tambSimb[i].Tipo;
+                switch (Type)
+                {
+                    case "int":
+                        if (numArr == -1)
+                            simbTable.Add(tambSimb[i].Nombre, 0); //Nuevo valor int con 0
+                        else
+                        {
+                            int[] array = new int[numArr];
+                            for (int j = 0; j < numArr; j++)
+                                array[j] = 0;   //se llena el arreglo int[numArr] con 0
+
+                            simbTable.Add(tambSimb[i].Nombre, array);
+                        }
+                        break;
+                    case "string":
+                        if (numArr == -1)
+                            simbTable.Add(tambSimb[i].Nombre, " "); //Nuevo valor int con ' '
+                        else
+                        {
+                            string[] array = new string[numArr];
+                            for (int j = 0; j < numArr; j++)
+                                array[j] = " ";   //se llena el arreglo int[numArr] con ' '
+
+                            simbTable.Add(tambSimb[i].Nombre, array);
+                        }
+                        break;
+                    case "float":
+                        if (numArr == -1)
+                            simbTable.Add(tambSimb[i].Nombre, 0); //Nuevo valor int con 0
+                        else
+                        {
+                            float[] array = new float[numArr];
+                            for (int j = 0; j < numArr; j++)
+                                array[j] = 0;   //se llena el arreglo int[numArr] con 0
+
+                            simbTable.Add(tambSimb[i].Nombre, array);
+                        }
+                        break;
+                }
+            }
         }
 
         public int interpreterStep(int index)
@@ -59,37 +122,6 @@ namespace CompiB
             if (i == -1)
                 MessageBox.Show("Algo estuvo mal en la Ejecucion de fragmento", "Atencion:");
         }
-
-        private void GenerateManualQuads()
-        {
-            quadsList = new List<Quad>();
-            quadsList.Add(new Quad(":=", "2", null, "numero", 0, 1));
-            quadsList.Add(new Quad(":=", "0", null, "dato", 1, 2));
-            quadsList.Add(new Quad("/", "numero", "2", "t1", 2, 3));
-            quadsList.Add(new Quad("goto", "6", null, null, 3, 3));
-            quadsList.Add(new Quad("-", "numero", "1", "t2", 4, 4));
-            quadsList.Add(new Quad(":=", "t2", null, "numero", 5, 4));
-            quadsList.Add(new Quad("+", "dato", "1", "t3", 6, 5));
-            quadsList.Add(new Quad(":=", "t3", null, "dato", 7, 5));
-            quadsList.Add(new Quad("goto", "3", null, null, 8, 6));
-            quadsList.Add(new Quad("end", null, null, null, 9, 7));
-        }
-
-        private void GenerateManualQuads2()
-        {
-            quadsList = new List<Quad>();
-            quadsList.Add(new Quad(":=", "2000", null, "numero", 0, 1));
-            quadsList.Add(new Quad(":=", "0", null, "dato", 1, 2));
-            quadsList.Add(new Quad(">", "numero", "1000", "t1", 2, 3));
-            quadsList.Add(new Quad("gotoF", "t1", "10", null, 3, 3));
-            quadsList.Add(new Quad("-", "numero", "1", "t2", 4, 4));
-            quadsList.Add(new Quad(":=", "t2", null, "numero", 5, 4));
-            quadsList.Add(new Quad("+", "dato", "1", "t3", 6, 5));
-            quadsList.Add(new Quad(":=", "t3", null, "dato", 7, 5));
-            quadsList.Add(new Quad("goto", "3", null, null, 8, 6));
-            quadsList.Add(new Quad("end", null, null, null, 9, 7));
-        }
-
 
         private void AddData(string keyVar, string resultVar)
         {
@@ -133,8 +165,6 @@ namespace CompiB
             int resOp = -1;
             int nextIndex = -1;
             int n;
-            bool isNumericOpA; 
-            bool isNumericOpB;
             string resCadena = "";
             double resOp2 = -1;
             
