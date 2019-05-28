@@ -51,6 +51,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cuadruplosGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabsimGrid)).BeginInit();
@@ -285,12 +286,24 @@
             this.label7.TabIndex = 16;
             this.label7.Text = "Paso a Paso";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(818, 71);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(183, 106);
+            this.button1.TabIndex = 18;
+            this.button1.Text = "Boton de pruebas";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ClientSize = new System.Drawing.Size(1371, 604);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label5);
@@ -348,6 +361,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button button1;
     }
 }
 
