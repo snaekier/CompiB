@@ -44,7 +44,7 @@ namespace CompiB
         /// <param name="e"></param>
         private void timerTick(object sender, EventArgs e)
         {
-            pictureBox1.Refresh();
+            //pictureBox1.Refresh();
         }
 
         /// <summary>
@@ -55,12 +55,23 @@ namespace CompiB
         private void Form1_Load(object sender, EventArgs e)
         {
             parser = new Parser(Helpers.DeSeralization2(), Helpers.DeSeralization());
+
+            //Código para num de linea
+            LineNumberTextBox.Font = programaText.Font;
+            programaText.Select();
+            AddLineNumbers();
         }
 
         private void programaText_TextChanged(object sender, EventArgs e)
         {
             posicion = programaText.SelectionStart;
             ejecucion();
+
+            //código para numeración de linea
+            if (programaText.Text == "")
+            {
+                AddLineNumbers();
+            }
         }
 
         /// <summary>
@@ -113,32 +124,32 @@ namespace CompiB
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void pictureBox1_Paint(object sender, PaintEventArgs e)
-        {
-            int altura = programaText.GetPositionFromCharIndex(0).Y;
+        //private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        //{
+        //    int altura = programaText.GetPositionFromCharIndex(0).Y;
 
-            if (programaText.Lines.Length > 0)
-                for (int i = 0; i < programaText.Lines.Length; i++)
-                {
-                    /*try
-                    {
-                        if (Cuadruplos.Count > 0)
-                        {
-                            if (Cuadruplos[AptCuadruplo].Linea == i + 1)
-                                e.Graphics.DrawString((i + 1).ToString(), programaText.Font, Brushes.Green, PictureNumText.Width - (e.Graphics.MeasureString((i + 1).ToString(), programaText.Font).Width + 10), altura);
-                            else
-                                e.Graphics.DrawString((i + 1).ToString(), programaText.Font, Brushes.Blue, PictureNumText.Width - (e.Graphics.MeasureString((i + 1).ToString(), programaText.Font).Width + 10), altura);
-                        }
-                        else*/
-                            e.Graphics.DrawString((i + 1).ToString(), programaText.Font, Brushes.Blue, pictureBox1.Width - (e.Graphics.MeasureString((i + 1).ToString(), programaText.Font).Width + 10), altura);
-                        altura += programaText.Font.Height;
-                   /* }
-                    catch { }*/
-                }
-            else
-                e.Graphics.DrawString("1", programaText.Font, Brushes.Blue, pictureBox1.Width - (e.Graphics.MeasureString("1", programaText.Font).Width + 10), altura);
+        //    if (programaText.Lines.Length > 0)
+        //        for (int i = 0; i < programaText.Lines.Length; i++)
+        //        {
+        //            /*try
+        //            {
+        //                if (Cuadruplos.Count > 0)
+        //                {
+        //                    if (Cuadruplos[AptCuadruplo].Linea == i + 1)
+        //                        e.Graphics.DrawString((i + 1).ToString(), programaText.Font, Brushes.Green, PictureNumText.Width - (e.Graphics.MeasureString((i + 1).ToString(), programaText.Font).Width + 10), altura);
+        //                    else
+        //                        e.Graphics.DrawString((i + 1).ToString(), programaText.Font, Brushes.Blue, PictureNumText.Width - (e.Graphics.MeasureString((i + 1).ToString(), programaText.Font).Width + 10), altura);
+        //                }
+        //                else*/
+        //                    e.Graphics.DrawString((i + 1).ToString(), programaText.Font, Brushes.Blue, pictureBox1.Width - (e.Graphics.MeasureString((i + 1).ToString(), programaText.Font).Width + 10), altura);
+        //                altura += programaText.Font.Height;
+        //           /* }
+        //            catch { }*/
+        //        }
+        //    else
+        //        e.Graphics.DrawString("1", programaText.Font, Brushes.Blue, pictureBox1.Width - (e.Graphics.MeasureString("1", programaText.Font).Width + 10), altura);
 
-        }
+        //}
 
         /// <summary>
         /// Abrir un proyecto ya hecho
@@ -326,6 +337,104 @@ namespace CompiB
             if (iQuad == 0)
                 interpreter.cleanInterpreter();
             iQuad = interpreter.interpreterStep(iQuad);
+        }
+
+
+
+        //Código para numero de linea
+        public int getWidth()
+        {
+            int w = 25;
+            // get total lines of programaText    
+            int line = programaText.Lines.Length;
+
+            if (line <= 99)
+            {
+                w = 20 + (int)programaText.Font.Size;
+            }
+            else if (line <= 999)
+            {
+                w = 30 + (int)programaText.Font.Size;
+            }
+            else
+            {
+                w = 50 + (int)programaText.Font.Size;
+            }
+
+            return w;
+        }
+
+        public void AddLineNumbers()
+        {
+            // create & set Point pt to (0,0)    
+            Point pt = new Point(0, 0);
+            // get First Index & First Line from programaText    
+            int First_Index = programaText.GetCharIndexFromPosition(pt);
+            int First_Line = programaText.GetLineFromCharIndex(First_Index);
+            // set X & Y coordinates of Point pt to ClientRectangle Width & Height respectively    
+            pt.X = ClientRectangle.Width;
+            pt.Y = ClientRectangle.Height;
+            // get Last Index & Last Line from programaText    
+            int Last_Index = programaText.GetCharIndexFromPosition(pt);
+            int Last_Line = programaText.GetLineFromCharIndex(Last_Index);
+            // set Center alignment to LineNumberTextBox    
+            LineNumberTextBox.SelectionAlignment = HorizontalAlignment.Center;
+            // set LineNumberTextBox text to null & width to getWidth() function value    
+            LineNumberTextBox.Text = "";
+            LineNumberTextBox.Width = getWidth();
+            // now add each line number to LineNumberTextBox upto last line    
+            for (int i = First_Line; i <= Last_Line; i++)
+            {
+                LineNumberTextBox.Text += i + 1 + "\n";
+            }
+        }
+
+        private void programaText_SelectionChanged(object sender, EventArgs e)
+        {
+            Point pt = programaText.GetPositionFromCharIndex(programaText.SelectionStart);
+            if (pt.X == 1)
+            {
+                AddLineNumbers();
+            }
+        }
+
+        private void programaText_VScroll(object sender, EventArgs e)
+        {
+            LineNumberTextBox.Text = "";
+            AddLineNumbers();
+            LineNumberTextBox.Invalidate();
+        }
+
+        private void programaText_FontChanged(object sender, EventArgs e)
+        {
+            LineNumberTextBox.Font = programaText.Font;
+            programaText.Select();
+            AddLineNumbers();
+        }
+
+        private void LineNumberTextBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            programaText.Select();
+            LineNumberTextBox.DeselectAll();
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            AddLineNumbers();
+        }
+
+        private void programaText_SelectionChanged_1(object sender, EventArgs e)
+        {
+            Point pt = programaText.GetPositionFromCharIndex(programaText.SelectionStart);
+            if (pt.X == 1)
+            {
+                AddLineNumbers();
+            }
+        }
+
+        private void programaText_Resize(object sender, EventArgs e)
+        {
+            AddLineNumbers();
         }
     }
 }
