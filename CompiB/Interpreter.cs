@@ -23,17 +23,36 @@ namespace CompiB
             tambSimb = tSimb;
         }
 
+        public int GetFirstLine()
+        {
+            return quadsList[0].NumL;
+        }
         public void cleanInterpreter()
         {
             VentStack = new Stack<string>();
             simbTable = new Dictionary<string, dynamic>();
         }
 
+        public int quadsAlto(int line)
+        {
+            List<Quad> quadsLine = quadsList.FindAll(pred => pred.NumL == line);
+            int resLine; 
+            int next = -1;
+            for (int i = 0; i <= quadsLine.Count - 1; i++)
+            {
+                next = ReadQuads(quadsLine[i].Num);
+            }
+            if (next >= quadsList.Count)
+                return -1;
+            else
+                return quadsList[next].NumL;
+        }
+
         /// <summary>
         /// Actualiza la tabla interna de simbolos con la que se genera en la compilación.
         /// </summary>
         /// <param name="tambSimb"></param>
-        private void UpdateSimbTable()
+        public void UpdateSimbTable()
         {
             for (int i = 0; i < tambSimb.Count; i++)
             {

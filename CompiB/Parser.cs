@@ -51,7 +51,7 @@ namespace CompiB
             nodesStack = new Stack<BinaryTreeNode>();
             auxArr = new Stack<BinaryTreeNode>();
             operatorsStack = new Stack<string>();
-            renderer = new Renderer(@"D:\Program Files (x86)\graphviz-2.38\release\bin"); //aquí debe ir la ruta de Graphviz
+            renderer = new Renderer(@"C:\Program Files (x86)\graphviz-2.38\bin"); //aquí debe ir la ruta de Graphviz
             graphVizEdges = new List<EdgeStatement>();
             graphVizNodes = new List<NodeStatement>();
 
