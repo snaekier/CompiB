@@ -18,13 +18,13 @@ defmain {
 			{
 				numero := entrada;
 				r := 0;
-				cont := 2;
-				while(cont <= numero)
+				cont := entrada - 1;
+				while(cont > 1)
 				{
-					if ((numero % cont) != 0){
+					if ((numero % cont) == 0){
 						r := 1;
 					}
-					cont := cont + 1;
+					cont := cont - 1;
 				}
 				salida := r;
 			}
