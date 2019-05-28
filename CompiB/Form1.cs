@@ -25,7 +25,7 @@ namespace CompiB
         int iQuad = 0;
         char banQuad = '0';
         Interpreter interpreter;
-        public int firstNumL;
+        public int firstNumL, auxAntNuml;
         bool banAlto = true;
 
         public Form1()
@@ -342,9 +342,15 @@ namespace CompiB
                 interpreter.UpdateSimbTable();
                 firstNumL = interpreter.GetFirstLine();
                 banAlto = false;
+                auxAntNuml = -1;
             }
+            if(auxAntNuml != -1)
+                pintalinea(auxAntNuml, Color.Black);
+            pintalinea(firstNumL, Color.Red);
+            auxAntNuml = firstNumL;
             firstNumL = interpreter.quadsAlto(firstNumL);
-            if(firstNumL == -1)
+
+            if (firstNumL == -1)
             {
                 MessageBox.Show("Termino Ejecucion de Alto nivel");
                 banAlto = true;
@@ -464,7 +470,7 @@ namespace CompiB
         }
 
         // Metodo para pintar un numero de linea que llega como n_linea
-        private void pintalinea(int n_linea)
+        private void pintalinea(int n_linea, Color paintCol)
         {
             var palabras = this.LineNumberTextBox.Text.Split(new char[] { '\n' },
                    StringSplitOptions.RemoveEmptyEntries);
@@ -475,7 +481,7 @@ namespace CompiB
                 {
                     inicio = this.LineNumberTextBox.Text.IndexOf(item, inicio);
                     this.LineNumberTextBox.Select(inicio, item.Length);
-                    this.LineNumberTextBox.SelectionColor = Color.Red;
+                    this.LineNumberTextBox.SelectionColor = paintCol;
                     this.LineNumberTextBox.SelectionStart = this.LineNumberTextBox.Text.Length;
                     inicio++;
                 }
@@ -486,7 +492,7 @@ namespace CompiB
 
         private void button1_Click(object sender, EventArgs e)
         {
-            pintalinea(5);
+            pintalinea(5, Color.Red);
         }
     }
 }
