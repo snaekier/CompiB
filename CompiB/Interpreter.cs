@@ -13,13 +13,14 @@ namespace CompiB
         Dictionary<string, dynamic> simbTable = new Dictionary<string, dynamic>();
         List<Quad> quadsList;
         Stack<string> VentStack;
+        List<Simbolo> tambSimb;
 
-        public Interpreter(List<Quad> quads, List<Simbolo> tambSimb)
+        public Interpreter(List<Quad> quads, List<Simbolo> tSimb)
         {
             quadsList = quads;
             VentStack = new Stack<string>();
             simbTable = new Dictionary<string, dynamic>();
-            UpdateSimbTable(tambSimb);
+            tambSimb = tSimb;
         }
 
         public void cleanInterpreter()
@@ -32,7 +33,7 @@ namespace CompiB
         /// Actualiza la tabla interna de simbolos con la que se genera en la compilación.
         /// </summary>
         /// <param name="tambSimb"></param>
-        private void UpdateSimbTable(List<Simbolo> tambSimb)
+        private void UpdateSimbTable()
         {
             for (int i = 0; i < tambSimb.Count; i++)
             {
@@ -107,6 +108,7 @@ namespace CompiB
 
         public void ExeAllQuads(int i)
         {
+            UpdateSimbTable();
             // Usa ReadQuads dandole el indice inicial y recuperar el siguiente 
             while (i <= quadsList.Count - 1 && i != -1)
                 i = ReadQuads(i);
@@ -125,34 +127,79 @@ namespace CompiB
 
         private void AddData(string keyVar, string resultVar)
         {
-            int n;
-            bool b;
-            if (simbTable.Keys.Contains(resultVar))
+            int n, numArr = 0;
+            bool b, KeyisArray = false;
+            float f;
+            string arrName = "";
+
+            int arrIndex = keyVar.IndexOf("[");
+            if(arrIndex >= 0)   //Verifica si es un arreglo
             {
-                if(simbTable[keyVar] is LblForm || simbTable[keyVar] is TxtBoxForm)
-                {
-                    //Acceder al form en ejecucion
-                    Form currentForm = simbTable[simbTable[keyVar].idOwnerForm].form;
-                    Control[] c = currentForm.Controls.Find(simbTable[keyVar].id, true);
+                arrName = keyVar;
+                arrName = arrName.Substring(0, arrIndex);
+
+                string strNum = keyVar.Substring(arrIndex + 1); 
+                numArr = int.Parse(strNum.Remove(strNum.Count() - 1));
+
+                keyVar = arrName;
+                KeyisArray = true; //si lo es actualiza informacion auxiliar 
+            }
+
+            if (simbTable[keyVar] is LblForm || simbTable[keyVar] is TxtBoxForm)
+            {   //KeyVar es una forma
+                Form currentForm = simbTable[simbTable[keyVar].idOwnerForm].form;
+                Control[] c = currentForm.Controls.Find(simbTable[keyVar].id, true);
+
+                dynamic op = ExtractOperand(resultVar);
+                c.First().Text = op.ToString();
+            }
+            else
+            {   //KeyVar es una variable
+                if (simbTable.Keys.Contains(resultVar))
+                {   //resultVar esta en simbTable
                     dynamic op = ExtractOperand(resultVar);
-                    c.First().Text = op.ToString();
+                    if (KeyisArray)  //KeyVar es un arreglo
+                        simbTable[arrName][numArr] = op;
+                    else
+                        simbTable[keyVar] = op;
                 }
                 else
-                {
-                    simbTable[keyVar] = simbTable[resultVar];
-                }              
-            }   
-            else
-            {
-                bool isNumeric = int.TryParse(resultVar, out n);
-                bool isBoolean = bool.TryParse(resultVar, out b);
-                if (isNumeric)
-                    simbTable[keyVar] = n;
-                else if (isBoolean)
-                    simbTable[keyVar] = b;
-                else
-                    simbTable[keyVar] = resultVar;
-            }
+                {   
+                    if (resultVar.Contains("["))
+                    {   //resultVar es un arreglo
+                        dynamic op = ExtractOperand(resultVar);
+                        simbTable[keyVar] = op;
+                    }
+                    else
+                    {   //resultVar esta un dato directo
+                        bool isNumeric = int.TryParse(resultVar, out n);
+                        bool isBoolean = bool.TryParse(resultVar, out b);
+                        bool isFloat = float.TryParse(resultVar, out f);
+                        if (KeyisArray)
+                        {   //KeyVar es un arreglo
+                            if (isNumeric)
+                                simbTable[arrName][numArr] = n;
+                            else if (isBoolean)
+                                simbTable[arrName][numArr] = b;
+                            else if (isFloat)
+                                simbTable[arrName][numArr] = f;
+                            else
+                                simbTable[arrName][numArr] = resultVar;
+                        }
+                        else
+                        {
+                            if (isNumeric)
+                                simbTable[keyVar] = n;
+                            else if (isBoolean)
+                                simbTable[keyVar] = b;
+                            else if (isFloat)
+                                simbTable[keyVar] = f;
+                            else
+                                simbTable[keyVar] = resultVar;
+                        }
+                    } 
+                }
+            }  
         }
 
         private int ReadQuads(int i)
@@ -167,13 +214,13 @@ namespace CompiB
             int n;
             string resCadena = "";
             double resOp2 = -1;
-            
+
             switch (quadsList[i].Operator)
             {
                 case ":=":  //keyVar := opA
                     keyVar = quadsList[i].Result.ToString();
                     OpA = quadsList[i].OperandA.ToString();
-                    if (simbTable.Keys.Contains(keyVar))
+                    if (simbTable.Keys.Contains(keyVar) || keyVar.Contains("["))
                         AddData(keyVar, OpA);
                     else
                     {
@@ -564,10 +611,23 @@ namespace CompiB
             bool b;
             float f;
 
-            if (simbTable.Keys.Contains(Op))
+            int numArr = 0;
+            string arrName = "";
+            int arrIndex = Op.IndexOf("[");
+
+            if (arrIndex >= 0)   //Verifica si es un arreglo
             {
-               if(simbTable[Op] is TxtBoxForm)
-               {
+                arrName = Op;
+                arrName = arrName.Substring(0, arrIndex);
+                string strNum = Op.Substring(arrIndex + 1);
+                numArr = int.Parse(strNum.Remove(strNum.Count() - 1));
+
+                return simbTable[arrName][numArr]; 
+            }
+            else if (simbTable.Keys.Contains(Op))
+            {
+                if (simbTable[Op] is TxtBoxForm)
+                {
                     //Acceder al form en ejecucion
                     Form currentForm = simbTable[simbTable[Op].idOwnerForm].form;
                     Control[] c = currentForm.Controls.Find(simbTable[Op].id, true);
@@ -581,8 +641,8 @@ namespace CompiB
                     else
                         return res;
                 }
-               else
-                return simbTable[Op];
+                else
+                    return simbTable[Op];
             }
             else
             {
