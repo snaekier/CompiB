@@ -25,6 +25,8 @@ namespace CompiB
         int iQuad = 0;
         char banQuad = '0';
         Interpreter interpreter;
+        public int firstNumL;
+        bool banAlto = true;
 
         public Form1()
         {
@@ -270,6 +272,7 @@ namespace CompiB
                 highLvlB.Enabled = true;
 
                 interpreter = new Interpreter(currentQuads, parser.TabSim);
+                banAlto = true;
             }
             else
             {
@@ -333,7 +336,19 @@ namespace CompiB
 
         private void highLvlB_Click(object sender, EventArgs e)
         {
-           
+            if (banAlto)
+            {
+                interpreter.cleanInterpreter();
+                interpreter.UpdateSimbTable();
+                firstNumL = interpreter.GetFirstLine();
+                banAlto = false;
+            }
+            firstNumL = interpreter.quadsAlto(firstNumL);
+            if(firstNumL == -1)
+            {
+                MessageBox.Show("Termino Ejecucion de Alto nivel");
+                banAlto = true;
+            }
         }
 
         private void lowLvlB_Click(object sender, EventArgs e)
@@ -341,11 +356,12 @@ namespace CompiB
             if (iQuad == 0)
             {
                 interpreter.cleanInterpreter();
+                interpreter.UpdateSimbTable();
+                //interpreter.step1 = true;
+                //interpreter.step2 = false;
             }
-            for(int i = 0; i < cuadruplosGrid.ColumnCount; i++)
-            {
-                cuadruplosGrid.Rows[iQuad].Cells[i].Style.BackColor = Color.LightBlue;
-            }
+            
+            cuadruplosGrid.Rows[iQuad].Selected = true;
             iQuad = interpreter.interpreterStep(iQuad);
         }
 
