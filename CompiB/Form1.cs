@@ -446,5 +446,31 @@ namespace CompiB
         {
             AddLineNumbers();
         }
+
+        // Metodo para pintar un numero de linea que llega como n_linea
+        private void pintalinea(int n_linea)
+        {
+            var palabras = this.LineNumberTextBox.Text.Split(new char[] { '\n' },
+                   StringSplitOptions.RemoveEmptyEntries);
+            int inicio = 0;
+            foreach (var item in palabras)
+            {
+                if (item == n_linea.ToString())
+                {
+                    inicio = this.LineNumberTextBox.Text.IndexOf(item, inicio);
+                    this.LineNumberTextBox.Select(inicio, item.Length);
+                    this.LineNumberTextBox.SelectionColor = Color.Red;
+                    this.LineNumberTextBox.SelectionStart = this.LineNumberTextBox.Text.Length;
+                    inicio++;
+                }
+            }
+            this.LineNumberTextBox.SelectionColor = Color.Black;
+            this.LineNumberTextBox.SelectionStart = this.LineNumberTextBox.Text.Length;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            pintalinea(5);
+        }
     }
 }
