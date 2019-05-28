@@ -228,7 +228,7 @@ namespace CompiB
             dynamic OperatorA;
             dynamic OperatorB;
             bool res;
-            int resOp = -1;
+            float resOp = -1;
             int nextIndex = -1;
             int n;
             string resCadena = "";
