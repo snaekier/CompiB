@@ -319,6 +319,21 @@ namespace CompiB
                     nextIndex = i;
                     nextIndex++;
                     break;
+                case "%":
+                    keyVar = quadsList[i].Result.ToString();
+                    OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());
+                    OperatorB = ExtractOperand(quadsList[i].OperandB.ToString());
+
+                    //resultado de %
+                    resOp = OperatorA % OperatorB;
+                    if (simbTable.Keys.Contains(keyVar))
+                        simbTable[keyVar] = resOp;
+                    else
+                        simbTable.Add(keyVar, resOp);
+
+                    nextIndex = i;
+                    nextIndex++;
+                    break;
                 case "**":
                     keyVar = quadsList[i].Result.ToString();
                     OperatorA = ExtractOperand(quadsList[i].OperandA.ToString());

@@ -318,11 +318,13 @@ namespace CompiB
 
         private void highLvlB_Click(object sender, EventArgs e)
         {
-            if (banQuad == '0')
-            {
+           
+        }
+
+        private void lowLvlB_Click(object sender, EventArgs e)
+        {
+            if (iQuad == 0)
                 interpreter.cleanInterpreter();
-                banQuad = '1';
-            }
             iQuad = interpreter.interpreterStep(iQuad);
         }
     }

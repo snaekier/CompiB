@@ -175,6 +175,7 @@
             this.lowLvlB.TabIndex = 7;
             this.lowLvlB.Text = "Paso a Paso (Bajo lvl)";
             this.lowLvlB.UseVisualStyleBackColor = true;
+            this.lowLvlB.Click += new System.EventHandler(this.lowLvlB_Click);
             // 
             // programaText
             // 
