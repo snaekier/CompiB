@@ -1,0 +1,23 @@
+defmain
+{
+	int res1 , res2 , aux1, aux2 , totalF 
+	vent vent1
+	textBox boxA, boxB
+	boton ejecuta
+	CreaVentana ( vent1 , "Timer" , 250 , 250 , 500 , 500 ) {
+		CreaLabel(label1, "Resistencia1",30,15);
+		CreaTextbox ( boxA , 30 , 30 , 200 , 50 ) ;
+		CreaLabel(label1, "Resistencia2",50,15);
+		CreaTextbox ( boxB , 50 , 30 , 200 , 50 ) ;
+		CreaLabel(label2, "Resultado Frecuencia",30,85);	
+		CreaBoton ( ejecuta , "Calcular" , 30 , 170 , 60 , 30 ) {
+			Click {
+				aux2 := 2 * res2 ;
+				aux2 := aux2 + res1;
+				aux2 := aux2 * 100;
+				totalF := 1.44 / aux2;
+				label2 := "Resultado:" + totalF;
+			}
+		}
+	}
+}
