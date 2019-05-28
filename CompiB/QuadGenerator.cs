@@ -106,7 +106,7 @@ namespace CompiB
                     Quad ifCondition = new Quad("GOTOFALSE", TempValuesStack.Pop(), null, null, Quads.Count, node.Left.Line);
                     Quads.Add(ifCondition);
                     SwitchNodes(node.Right);
-                    ifCondition.OperandB = Quads.Count - 1;
+                    ifCondition.OperandB = Quads.Count;
 
                     break;
                 // #27 en Parser
@@ -115,7 +115,7 @@ namespace CompiB
                     Quad ifElseCondition = new Quad("GOTOFALSE", TempValuesStack.Pop(), null, null, Quads.Count, node.Left.Line);
                     Quads.Add(ifElseCondition);
                     SwitchNodes(node.Left.Right); // --> (else) --> (left)
-                    ifElseCondition.OperandB = Quads.Count - 1;
+                    ifElseCondition.OperandB = Quads.Count ;
                     SwitchNodes(node.Left.Right);
 
 
