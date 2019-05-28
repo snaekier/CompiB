@@ -101,7 +101,7 @@
             // 
             this.anaToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("anaToolStripMenuItem.Image")));
             this.anaToolStripMenuItem.Name = "anaToolStripMenuItem";
-            this.anaToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.anaToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
             this.anaToolStripMenuItem.Text = "TAS";
             this.anaToolStripMenuItem.Click += new System.EventHandler(this.anaToolStripMenuItem_Click);
             // 
@@ -109,7 +109,7 @@
             // 
             this.tAASToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("tAASToolStripMenuItem.Image")));
             this.tAASToolStripMenuItem.Name = "tAASToolStripMenuItem";
-            this.tAASToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.tAASToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
             this.tAASToolStripMenuItem.Text = "TAAS";
             this.tAASToolStripMenuItem.Click += new System.EventHandler(this.tAASToolStripMenuItem_Click);
             // 
@@ -117,7 +117,7 @@
             // 
             this.grámaticaToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("grámaticaToolStripMenuItem.Image")));
             this.grámaticaToolStripMenuItem.Name = "grámaticaToolStripMenuItem";
-            this.grámaticaToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.grámaticaToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
             this.grámaticaToolStripMenuItem.Text = "Grámatica";
             this.grámaticaToolStripMenuItem.Click += new System.EventHandler(this.grámaticaToolStripMenuItem_Click);
             // 
@@ -126,6 +126,7 @@
             this.cuadruplosGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.cuadruplosGrid.Location = new System.Drawing.Point(783, 266);
             this.cuadruplosGrid.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cuadruplosGrid.MultiSelect = false;
             this.cuadruplosGrid.Name = "cuadruplosGrid";
             this.cuadruplosGrid.ReadOnly = true;
             this.cuadruplosGrid.RowTemplate.Height = 24;

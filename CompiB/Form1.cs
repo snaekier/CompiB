@@ -339,7 +339,13 @@ namespace CompiB
         private void lowLvlB_Click(object sender, EventArgs e)
         {
             if (iQuad == 0)
+            {
                 interpreter.cleanInterpreter();
+            }
+            for(int i = 0; i < cuadruplosGrid.ColumnCount; i++)
+            {
+                cuadruplosGrid.Rows[iQuad].Cells[i].Style.BackColor = Color.LightBlue;
+            }
             iQuad = interpreter.interpreterStep(iQuad);
         }
 

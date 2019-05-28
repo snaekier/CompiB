@@ -564,14 +564,14 @@ namespace CompiB
 
             //si te da un error aquí es porque no está bien la ruta de Graphviz
             //casi al inicio de este archivo puesdes encontrarla.
-            using (Stream file = File.Create("semantic_tree.png"))
+         /*   using (Stream file = File.Create("semantic_tree.png"))
             {
                 await renderer.RunAsync(
                     graph, file,
                     RendererLayouts.Dot,
                     RendererFormats.Png,
                     CancellationToken.None);
-            }
+            }*/
         }
 
         /// <summary>
