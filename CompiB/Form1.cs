@@ -27,7 +27,7 @@ namespace CompiB
         Interpreter interpreter;
         public int firstNumL, auxAntNuml;
         bool banAlto = true;
-        int num_linrs_rjr = -1;
+
         public Form1()
         {
             InitializeComponent();
@@ -344,13 +344,9 @@ namespace CompiB
                 banAlto = false;
                 auxAntNuml = -1;
             }
-            if (auxAntNuml != -1)
-            {
-                num_linrs_rjr = auxAntNuml;
-                pintalinea();
-            }
-            num_linrs_rjr = firstNumL;
-            pintalinea();
+            if(auxAntNuml != -1)
+                pintalinea(auxAntNuml, Color.Black);
+            pintalinea(firstNumL, Color.Red);
             auxAntNuml = firstNumL;
             firstNumL = interpreter.quadsAlto(firstNumL);
 
@@ -423,7 +419,6 @@ namespace CompiB
             {
                 LineNumberTextBox.Text += i + 1 + "\n";
             }
-            pintalinea();
         }
 
         private void programaText_SelectionChanged(object sender, EventArgs e)
@@ -475,41 +470,29 @@ namespace CompiB
         }
 
         // Metodo para pintar un numero de linea que llega como n_linea
-        private void pintalinea()
+        private void pintalinea(int n_linea, Color paintCol)
         {
-            if (num_linrs_rjr != -1)
+            var palabras = this.LineNumberTextBox.Text.Split(new char[] { '\n' },
+                   StringSplitOptions.RemoveEmptyEntries);
+            int inicio = 0;
+            foreach (var item in palabras)
             {
-                var palabras = this.LineNumberTextBox.Text.Split(new char[] { '\n' },
-                       StringSplitOptions.RemoveEmptyEntries);
-                int inicio = 0;
-                foreach (var item in palabras)
+                if (item == n_linea.ToString())
                 {
-                    if (item == num_linrs_rjr.ToString())
-                    {
-                        inicio = this.LineNumberTextBox.Text.IndexOf(item, inicio);
-                        this.LineNumberTextBox.Select(inicio, item.Length);
-                        this.LineNumberTextBox.SelectionColor = Color.Red;
-                        this.LineNumberTextBox.SelectionStart = this.LineNumberTextBox.Text.Length;
-                        inicio++;
-                    }
-                    else
-                    {
-
-                        inicio = this.LineNumberTextBox.Text.IndexOf(item, inicio);
-                        this.LineNumberTextBox.Select(inicio, item.Length);
-                        this.LineNumberTextBox.SelectionColor = Color.Black;
-                        this.LineNumberTextBox.SelectionStart = this.LineNumberTextBox.Text.Length;
-                        inicio++;
-                    }
+                    inicio = this.LineNumberTextBox.Text.IndexOf(item, inicio);
+                    this.LineNumberTextBox.Select(inicio, item.Length);
+                    this.LineNumberTextBox.SelectionColor = paintCol;
+                    this.LineNumberTextBox.SelectionStart = this.LineNumberTextBox.Text.Length;
+                    inicio++;
                 }
-                this.LineNumberTextBox.SelectionColor = Color.Black;
-                this.LineNumberTextBox.SelectionStart = this.LineNumberTextBox.Text.Length;
             }
+            this.LineNumberTextBox.SelectionColor = Color.Black;
+            this.LineNumberTextBox.SelectionStart = this.LineNumberTextBox.Text.Length;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //pintalinea(5, Color.Red);
+            pintalinea(5, Color.Red);
         }
     }
 }
